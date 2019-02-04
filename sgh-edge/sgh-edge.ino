@@ -1,11 +1,14 @@
 #include <ESP8266WiFi.h>
+#include "DHT.h"
 
 #define NAME "Marchetti Fabio"
 #define PASS "0f0f0f0f0f"
+#define DHTPIN 4
+#define DHTTYPE DHT22
 
-const char* host = "192.168.1.115";
-
+const char* host = "192.168.1.102";
 WiFiClient client;
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(115200);
@@ -30,15 +33,20 @@ void setup() {
 }
 
 void loop() {
+  float h = dht.readHumidity();
   if (client.connect(host, 9876))
   {
     Serial.print("Connected to: ");
     Serial.println(host);
 
-    /* Send "connected" to the server so it knows we are ready for data */
-    client.println("deviceconnected");
+    Serial.println(h);
+//    if (isnan(h)) {
+//      client.println("DHT read failed");
+//    } else {
+      client.println(h);
+//    }
   } else {
     Serial.println("Connection problems");
   }
-  delay(5000);
+  delay(2000);
 }

@@ -1,13 +1,15 @@
 package org.sgh.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class SmartGreenHouseServer {
 
 	public static void main(String[] args) throws IOException {
-		//new SocketServerEdge(9876).run();
-		new SocketServerGUI(9875).run();
-
+		InetAddress inetAddress = InetAddress. getLocalHost();
+		System.out.println(inetAddress.getHostAddress());
+		new SocketServerEdge(9876, "ESP").start();
+		new SocketServerGUI(9875, "GUI").start();
 	}
 
 }

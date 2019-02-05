@@ -13,6 +13,7 @@
 
 #define SONAR_ECHO_PIN 7
 #define SONAR_TRIGGER_PIN 6
+#define SERVO_MOTOR_PIN 8
 #define LED1_PIN 13
 #define LED2_PIN 11
 #define LED3_PIN 12
@@ -25,12 +26,12 @@ void setup() {
 	MsgService.init();
 
   Task* modeManagerTask = new ModeManagerTask(SONAR_ECHO_PIN, SONAR_TRIGGER_PIN);
-  modeManagerTask->init(200);
+  modeManagerTask->init(100);
   sched.addTask(modeManagerTask);
 
-  // Task* pumpTask = new PumpTask(LED2_PIN);
-  // pumpTask->init(100);
-  // sched.addTask(pumpTask);
+  Task* pumpTask = new PumpTask(LED2_PIN, SERVO_MOTOR_PIN);
+  pumpTask->init(50);
+  sched.addTask(pumpTask);
 
 	// Task* autoModeTask = new AutoModeTask(LED1_PIN);
 	// autoModeTask->init(50);

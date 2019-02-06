@@ -1,4 +1,4 @@
-package org.sgh.server;
+package iot.sgh.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;

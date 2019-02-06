@@ -12,7 +12,7 @@ public class SocketClientExample {
         Socket socket;
         String msg = "";
         while (!msg.equals("exit")) {
-            socket = new Socket("192.168.1.102", 9875);
+            socket = new Socket("192.168.178.113", 9875);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             msg = in.readLine();
             System.out.println(msg);

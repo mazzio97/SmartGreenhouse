@@ -1,11 +1,11 @@
-package org.sgh.server;
+package iot.sgh.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import org.sgh.data.DataCenter;
+import iot.sgh.data.DataCenter;
 
 public class SocketServerEdge extends AbstractSocketServer {
 	private DataCenter dc;

@@ -1,4 +1,4 @@
-package org.sgh.data;
+package iot.sgh.data;
 
 import java.util.ArrayList;
 import java.util.List;

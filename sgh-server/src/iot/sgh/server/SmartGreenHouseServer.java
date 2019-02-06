@@ -1,4 +1,4 @@
-package org.sgh.server;
+package iot.sgh.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -10,6 +10,7 @@ public class SmartGreenHouseServer {
 		System.out.println(inetAddress.getHostAddress());
 		new SocketServerEdge(9876, "ESP").start();
 		new SocketServerGUI(9875, "GUI").start();
+		new MessagesThread().start();
 	}
 
 }

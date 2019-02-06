@@ -6,7 +6,7 @@
 #define DHTPIN 4
 #define DHTTYPE DHT22
 
-const char* host = "192.168.1.102";
+const char* host = "192.168.178.113";
 WiFiClient client;
 DHT dht(DHTPIN, DHTTYPE);
 

@@ -1,11 +1,11 @@
-package org.sgh.server;
+package iot.sgh.server;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import org.sgh.data.DataCenter;
+import iot.sgh.data.DataCenter;
 
 public class SocketServerGUI extends AbstractSocketServer {
 	private DataCenter dc;
@@ -17,11 +17,11 @@ public class SocketServerGUI extends AbstractSocketServer {
 
 	@Override
 	void job(Socket socket) throws IOException, InterruptedException {
-		 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-         out.write(dc.getLastData().toString());
-         out.flush();
-         socket.close();
-         Thread.sleep(1000);
+	    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+	    out.write(dc.getLastData().toString());
+	    out.flush();
+	    socket.close();
+	    Thread.sleep(1000);
 	}
 
 }

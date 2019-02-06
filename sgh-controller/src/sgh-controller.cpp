@@ -33,9 +33,9 @@ void setup() {
   pumpTask->init(50);
   sched.addTask(pumpTask);
 
-	// Task* autoModeTask = new AutoModeTask(LED1_PIN);
-	// autoModeTask->init(50);
-	// sched.addTask(autoModeTask);
+	Task* autoModeTask = new AutoModeTask(LED1_PIN);
+	autoModeTask->init(100);
+	sched.addTask(autoModeTask);
 
   // Task* manualModeTask = new ManualModeTask(LED3_PIN);
   // manualModeTask->init(50);

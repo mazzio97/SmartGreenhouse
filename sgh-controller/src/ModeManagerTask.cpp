@@ -21,7 +21,7 @@ void ModeManagerTask::tick() {
 			break;
 
 		case MM1:
-			GreenHouse::setFlowRate(50);
+			GreenHouse::setFlowRate(100);
 			if (this->us->getDistance() >= DIST) {
 				this->taskState = MM0;
 			}

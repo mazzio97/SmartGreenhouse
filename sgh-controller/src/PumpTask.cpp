@@ -22,9 +22,10 @@ void PumpTask::tick() {
 
 		case P1:
 			this->servo->open();
-			this->led->switchOn();
+			if (!this->led->isOn()) {
+				this->led->switchOn();
+			}
 			if (GreenHouse::getFlowRate() <= 0) {
-				this->led->switchOff();
 				this->taskState = P2;
 			}
 			break;
@@ -34,6 +35,7 @@ void PumpTask::tick() {
 				this->taskState = P1;
 			} else if (this->servo->getPosition() <= 0) {
 				this->servo->off();
+				this->led->switchOff();
 				this->taskState = P0;
 			}
 			break;

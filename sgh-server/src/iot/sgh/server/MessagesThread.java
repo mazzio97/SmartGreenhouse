@@ -1,7 +1,7 @@
 package iot.sgh.server;
 
 import iot.sgh.data.DataCenter;
-import iot.sgh.utility.SerialCommChannel;
+import iot.sgh.utility.serial.SerialCommChannel;
 import jssc.SerialPortList;
 
 public class MessagesThread implements Runnable {

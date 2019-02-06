@@ -1,4 +1,4 @@
-package iot.sgh.utility;
+package iot.sgh.utility.serial;
 
 import java.util.concurrent.*;
 import jssc.*;

@@ -20,9 +20,9 @@ public class SocketServerEdge extends AbstractSocketServer {
 		 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		 try {
 			 float h = Float.parseFloat(in.readLine());
-			 dc.pushData(h);
+			 dc.recordHumidity(h);
 		 } catch (NumberFormatException e) {
-			 System.out.println("Not a Number BRO!");
+			 System.out.println("Not a Number");
 		 }
          socket.close();
 	}

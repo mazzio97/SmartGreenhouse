@@ -1,4 +1,4 @@
-package iot.sgh.utility;
+package iot.sgh.utility.serial;
 
 /**
  * Simple interface for an async msg communication channel

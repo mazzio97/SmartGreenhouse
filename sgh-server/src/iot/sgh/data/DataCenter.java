@@ -1,32 +1,46 @@
 package iot.sgh.data;
 
-import java.util.ArrayList;
+import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DataCenter {
-	
-    private static DataCenter instance = null; 
-    private List<Float> humidity;
+
+    public static final int MIN_HUMIDITY = 30; // percentage
+    public static final int DELTA_HUMIDITY = 5; // percentage
+
+    private static DataCenter instance = null;
+    
+    private final WaterPump pump = new WaterPump();
+    private final Map<Instant, Float> humidity = new LinkedHashMap<>();
+    private final List<Irrigation> irrigation = new LinkedList<>();
     
     private DataCenter() {
-		humidity = new ArrayList<>();
+        
     }
    
     public static DataCenter getInstance() { 
-	    if (instance == null) 
-	        instance = new DataCenter(); 
-	    return instance; 
-    } 
+	if (instance == null) 
+	    instance = new DataCenter(); 
+	return instance; 
+    }
     
-    public void pushData(Float h) {
-    	humidity.add(h);
+    public void recordHumidity(final float humValue) {
+    	humidity.put(Instant.now(), humValue);
+    }
+
+    public void recordIrrigation() {
+        
     }
     
     public Float getLastData() {
-    	return humidity.get(humidity.size() - 1);
+        return humidity.values().stream().collect(Collectors.toList()).get(humidity.size() - 1);
     }
     
     public Float getSecondLastData() {
-    	return humidity.get(humidity.size() - 2);
+        return humidity.values().stream().collect(Collectors.toList()).get(humidity.size() - 2);
     }
 }

@@ -21,7 +21,6 @@ public:
 private:
   int pin; 
   int currAngle;
-  bool dir;
   ServoTimer2 motor; 
 };
 

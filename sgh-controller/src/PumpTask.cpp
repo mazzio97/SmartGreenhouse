@@ -3,11 +3,11 @@
 #include "MsgService.h"
 #include "GreenHouse.h"
 #include "ServoMotorImpl.h"
-#include "Led.h"
+#include "LedExt.h"
 
 PumpTask::PumpTask(int ledPin, int servoPin) {
 	this->taskState = P0;
-	this->led = new Led(ledPin);
+	this->led = new LedExt(ledPin, 0);
 	this->servo = new ServoMotorImpl(servoPin);
 }
 
@@ -15,6 +15,8 @@ void PumpTask::tick() {
 		switch (this->taskState) {
 		case P0:
 			if (GreenHouse::getFlowRate() > 0) {
+				this->led->switchOn();
+				this->led->setIntensity(GreenHouse::getFlowRate());
 				this->servo->on();
 				this->taskState = P1;
 			}
@@ -22,9 +24,6 @@ void PumpTask::tick() {
 
 		case P1:
 			this->servo->open();
-			if (!this->led->isOn()) {
-				this->led->switchOn();
-			}
 			if (GreenHouse::getFlowRate() <= 0) {
 				this->taskState = P2;
 			}
@@ -34,8 +33,8 @@ void PumpTask::tick() {
 			if (GreenHouse::getFlowRate() > 0) {
 				this->taskState = P1;
 			} else if (this->servo->getPosition() <= 0) {
-				this->servo->off();
 				this->led->switchOff();
+				this->servo->off();
 				this->taskState = P0;
 			}
 			break;

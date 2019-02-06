@@ -15,7 +15,7 @@
 #define SONAR_TRIGGER_PIN 6
 #define SERVO_MOTOR_PIN 8
 #define LED1_PIN 13
-#define LED2_PIN 11
+#define LED2_PIN 5
 #define LED3_PIN 12
 
 Scheduler sched;

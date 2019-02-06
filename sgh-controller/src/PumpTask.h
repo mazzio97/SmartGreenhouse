@@ -2,7 +2,7 @@
 #define __PUMP_TASK__
 
 #include "Task.h"
-#include "Light.h"
+#include "LightExt.h"
 #include "ServoMotor.h"
 #include "UltraSonicSensor.h"
 
@@ -13,7 +13,7 @@ public:
 	void tick();
 
 private:
-	Light *led;
+	LightExt *led;
 	ServoMotor *servo;
 	enum TaskState {P0, P1, P2} taskState;
 };

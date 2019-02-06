@@ -12,7 +12,7 @@ public:
 	bool isOn();
 	int getPin();  
 
-private:
+protected:
 	int pin;
 };
 

@@ -6,7 +6,7 @@
 
 AutoModeTask::AutoModeTask(int ledPin) {
 	this->led = new Led(ledPin);
-	this->currTaskState = A0;
+	this->currTaskState = AM0;
 }
 
 void AutoModeTask::updateTaskState(TaskState s) {
@@ -16,46 +16,53 @@ void AutoModeTask::updateTaskState(TaskState s) {
 
 void AutoModeTask::tick() {
 		switch (this->currTaskState) {
-		case A0:
+		case AM0:
 			if (this->led->isOn()) {
 				this->led->switchOff();
 			}
 			if (GreenHouse::checkState(AUTO)) {
 				this->led->switchOn();
-				this->timeCnt = 0;
-				updateTaskState(A1);
+				updateTaskState(AM1);
 			}
 			break;
-		case A1:
-			if (GreenHouse::checkState(MANUAL)) {
-				updateTaskState(A0);
-			} else if (MsgService.isMsgAvailable()) {
+		case AM1: {
+			int val = 0;
+			if (MsgService.isMsgAvailable()) {
 				Msg *msg = MsgService.receiveMsg();
-				GreenHouse::setFlowRate(msg->convertToInt());
-				updateTaskState(A2);
+				val = msg->convertToInt();
+			}
+			if (GreenHouse::checkState(MANUAL)) {
+				updateTaskState(AM0);
+			} else if (val > 0) {
+				GreenHouse::setFlowRate(val);
+				this->timeCnt = 0;
+				updateTaskState(AM2);
 			}
 			break;
-		case A2:
-			if (this->timeCnt < TMAX / this->getPeriod()) {
+		}
+		case AM2: {
+			if (this->timeCnt < (TMAX / this->getPeriod())) {
 				updateTaskState(CNT);
-			} else if (MsgService.isMsgAvailable() || GreenHouse::checkState(MANUAL)) {
-				updateTaskState(A4);
-			} else if (this->timeCnt >= TMAX) {
-				updateTaskState(A3);
+			} else if (this->timeCnt >= (TMAX / this->getPeriod())) {
+				this->timeCnt = 0;
+				updateTaskState(AM4);
 			}
-			
+			// } else if (MsgService.isMsgAvailable() || GreenHouse::checkState(MANUAL)) {
+			// 	updateTaskState(AM4);
+			// }
 			break;
-		case A3:
-			MsgService.sendMsg("Segnalazione");
-			updateTaskState(A4);
+		}
+		case AM3:
+			//MsgService.sendMsg("Segnalazione");
+			updateTaskState(AM4);
 			break;
-		case A4:
+		case AM4:
 			GreenHouse::setFlowRate(0);
-			updateTaskState(A1);
+			updateTaskState(AM1);
 			break;
 		case CNT:
 			this->timeCnt++;
-			updateTaskState(A2);
+			updateTaskState(this->prevTaskState);
 			break;
 	}
 }

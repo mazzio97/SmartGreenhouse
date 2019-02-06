@@ -5,11 +5,11 @@
 #include "Light.h"
 #include "UltraSonicSensor.h"
 
-#define TMAX 5000
+#define TMAX 2000
 
-enum TaskState {A0, A1, A2, A3, A4, CNT};
 
 class AutoModeTask : public Task {
+enum TaskState {AM0, AM1, AM2, AM3, AM4, CNT};
 
 public:
 	AutoModeTask(int ledPin);

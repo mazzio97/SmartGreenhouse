@@ -4,7 +4,6 @@
 ServoMotorImpl::ServoMotorImpl(int pin) {
   this->pin = pin;
   this->currAngle = 0; 
-  this->dir = true;
 } 
 
 void ServoMotorImpl::on(){

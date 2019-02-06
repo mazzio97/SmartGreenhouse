@@ -25,4 +25,8 @@ public class DataCenter {
     public Float getLastData() {
     	return humidity.get(humidity.size() - 1);
     }
+    
+    public Float getSecondLastData() {
+    	return humidity.get(humidity.size() - 2);
+    }
 }

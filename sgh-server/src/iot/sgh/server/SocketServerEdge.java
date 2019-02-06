@@ -18,7 +18,12 @@ public class SocketServerEdge extends AbstractSocketServer {
 	@Override
 	void job(Socket socket) throws IOException {
 		 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		 dc.pushData(Float.parseFloat(in.readLine()));
+		 try {
+			 float h = Float.parseFloat(in.readLine());
+			 dc.pushData(h);
+		 } catch (NumberFormatException e) {
+			 System.out.println("Not a Number BRO!");
+		 }
          socket.close();
 	}
 

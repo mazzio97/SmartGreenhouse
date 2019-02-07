@@ -41,15 +41,17 @@ void AutoModeTask::tick() {
 			break;
 		}
 		case AM2: {
-			if (this->timeCnt < (TMAX / this->getPeriod())) {
-				updateTaskState(CNT);
-			} else if (this->timeCnt >= (TMAX / this->getPeriod())) {
+			int val = GreenHouse::getFlowRate();
+			if (MsgService.isMsgAvailable()) {
+				Msg *msg = MsgService.receiveMsg();
+				val = msg->convertToInt();
+			}
+			if (this->timeCnt >= (TMAX / this->getPeriod()) || val <= 0) {
 				this->timeCnt = 0;
 				updateTaskState(AM4);
-			}
-			// } else if (MsgService.isMsgAvailable() || GreenHouse::checkState(MANUAL)) {
-			// 	updateTaskState(AM4);
-			// }
+			} else if (this->timeCnt < (TMAX / this->getPeriod())) {
+				updateTaskState(CNT);
+			} 
 			break;
 		}
 		case AM3:

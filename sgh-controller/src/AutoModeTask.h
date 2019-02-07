@@ -5,7 +5,7 @@
 #include "Light.h"
 #include "UltraSonicSensor.h"
 
-#define TMAX 2000
+#define TMAX 10000
 
 
 class AutoModeTask : public Task {

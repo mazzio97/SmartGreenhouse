@@ -1,14 +1,14 @@
 #include <ESP8266WiFi.h>
 #include "DHT.h"
 
-#define NAME "Marchetti Fabio"
-#define PASS "0f0f0f0f0f"
+#define NAME "EOLO - FRITZ!Box MC"
+#define PASS "98241153892377645827"
 #define DHTPIN 4
 #define DHTTYPE DHT22
 
 const char* host = "192.168.178.113";
 WiFiClient client;
-DHT dht(DHTPIN, DHTTYPE);
+//DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(115200);
@@ -30,11 +30,13 @@ void setup() {
 
   Serial.print("Connected, IP address: ");
   Serial.println(WiFi.localIP());
+  pinMode(A0, INPUT);
 }
 
 void loop() {
-  float h = dht.readHumidity();
-  if (client.connect(host, 9876))
+  //float h = dht.readHumidity();
+  float h = analogRead(A0) / 10;
+  if (client.connect(host, 5050))
   {
     Serial.print("Connected to: ");
     Serial.println(host);
@@ -48,5 +50,5 @@ void loop() {
   } else {
     Serial.println("Connection problems");
   }
-  delay(2000);
+  delay(1000);
 }

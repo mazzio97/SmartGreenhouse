@@ -1,49 +1,64 @@
 package iot.sgh.data;
 
 import java.time.Instant;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 public class Irrigation {
     
-    public static final int MAX_DURATION = 5000; // millisecs
-    
-    private final Instant begin;
-    private Optional<Instant> end;
+    private final Entry<Instant, Double> begin;
+    private Optional<Entry<Instant, Double>> end;
     private final int flow; // lt/min
-    private long duration; // millisecs
     private Optional<Report> report;
     
-    public Irrigation(final int flow, final Instant begin) {
+    // package-private
+    Irrigation(final int flow, final Entry<Instant, Double> begin) {
         this.flow = flow;
         this.begin = begin;
+        this.end = Optional.empty();
         this.report = Optional.empty();
+    }
+
+    public boolean isFinished() {
+        return this.end.isPresent();
+    }
+    
+    public double getBeginHumidity() {
+        return this.begin.getValue();
     }
     
     public Instant getBeginTime() {
-        return this.begin;
+        return this.begin.getKey();
     }
     
+    public void end() {
+        this.end = Optional.of(DataCentre.getInstance().getLastPerceivedHumidity())
+                           .filter(h -> !isFinished());
+    }
+
+    public Optional<Instant> getEndTime() {
+        return this.end.map(e -> e.getKey());
+    }
+
     public int getFlow() {
         return this.flow;
     }
     
     public Optional<Long> getDuration() {
-        return this.end.isPresent() ? Optional.of(duration) : Optional.empty();
+        return this.end.map(e -> e.getKey().toEpochMilli() - begin.getKey().toEpochMilli());
     }
     
+    public void makeReport(Report r) {
+        this.report = Optional.of(r);
+    }
+
     public Optional<Report> getReport() {
         return this.report;
     }
     
-    public void setEndDate(final Instant end) {
-        this.end = Optional.of(end);
-        this.duration = this.end.get().getEpochSecond() - this.begin.getEpochSecond();
-        if (duration > MAX_DURATION) {
-            makeReport(Report.TIME_EXCEDEED);
-        }
+    @Override
+    public String toString() {
+        return this.getBeginTime().toString() + " -> " + this.getBeginHumidity();
     }
-    
-    private void makeReport(Report r) {
-        this.report = Optional.of(r);
-    }
+
 }

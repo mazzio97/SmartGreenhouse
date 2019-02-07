@@ -5,20 +5,19 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import iot.sgh.data.DataCenter;
+import iot.sgh.data.DataCentre;
 
 public class SocketServerGUI extends AbstractSocketServer {
-	private DataCenter dc;
+	private DataCentre data = DataCentre.getInstance();
 
 	public SocketServerGUI(int port, String name) throws IOException {
 		super(port, name);
-		this.dc = DataCenter.getInstance();
 	}
 
 	@Override
 	void job(Socket socket) throws IOException, InterruptedException {
 	    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-	    out.write(dc.getLastData().toString());
+	    out.write(data.getLastPerceivedHumidity().getValue().toString());
 	    out.flush();
 	    socket.close();
 	    Thread.sleep(1000);

@@ -9,7 +9,7 @@
 
 
 class AutoModeTask : public Task {
-enum TaskState {AM0, AM1, AM2, AM3, AM4, CNT};
+enum TaskState {AM0, AM1, AM2, AM3, AM4};
 
 public:
 	AutoModeTask(int ledPin);
@@ -18,7 +18,6 @@ public:
 
 private:
 	Light *led;
-	unsigned int timeCnt;
 	TaskState prevTaskState;
 	TaskState currTaskState;
 };

@@ -40,14 +40,11 @@ void AutoModeTask::tick() {
 		}
 		case AM2: {
 			if (MsgService.isMsgAvailable() && MsgService.receiveMsg()->convertToInt() <= 0) {
-				updateTaskState(AM4);
+				updateTaskState(AM3);
 			}
 			break;
 		}
 		case AM3:
-			updateTaskState(AM4);
-			break;
-		case AM4:
 			GreenHouse::setFlowRate(0);
 			updateTaskState(AM1);
 			break;

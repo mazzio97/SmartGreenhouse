@@ -33,6 +33,7 @@ void PumpTask::tick() {
 		case P2:
 			this->servo->close();
 			if (GreenHouse::getFlowRate() > 0) {
+				this->led->setIntensity(GreenHouse::getFlowRate());
 				this->taskState = P1;
 			} else if (this->servo->getPosition() <= 0) {
 				this->led->switchOff();

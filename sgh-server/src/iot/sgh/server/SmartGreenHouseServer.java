@@ -3,7 +3,7 @@ package iot.sgh.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import iot.sgh.observables.ObservableHumiditySensor;
-import iot.sgh.utility.eventloop.Observable;
+import iot.sgh.observables.ObservableTimer;
 import iot.sgh.utility.serial.SerialCommChannel;
 import jssc.SerialPortList;
 
@@ -28,9 +28,10 @@ public class SmartGreenHouseServer {
 
 
 //		new SocketServerGUI(9875, "GUI").start();
-        final Observable humiditySensor = new ObservableHumiditySensor();
-		new SocketServerEdge(5050, "ESP", humiditySensor).start();
-	    new SmartGreenHouseController(humiditySensor).start();
+        final ObservableHumiditySensor humiditySensor = new ObservableHumiditySensor();
+        final ObservableTimer timer = new ObservableTimer();
+		new SocketServerEdge(5050, "ESP", humiditySensor, timer).start();
+	    new SmartGreenHouseController(humiditySensor, timer).start();
 	}
     
     public static SerialCommChannel getChannel() {

@@ -5,16 +5,16 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public abstract class EventLoopControllerWithHandlers extends BasicEventLoopController {
 	
-	protected HashMap<Class,Handler> handlers;
+	protected HashMap<Class, Handler> handlers;
 	
-	protected EventLoopControllerWithHandlers(int size){
+	protected EventLoopControllerWithHandlers(int size) {
 		eventQueue = new ArrayBlockingQueue<Event>(size);
 		handlers = new HashMap<>();
 		setupHandlers();
 	}
 
-	protected EventLoopControllerWithHandlers(){
-		this(defaultEventQueueSize);
+	protected EventLoopControllerWithHandlers() {
+		this(DEFAULT_EVENT_QUEUE_SIZE);
 	}
 	
 	abstract protected void setupHandlers();

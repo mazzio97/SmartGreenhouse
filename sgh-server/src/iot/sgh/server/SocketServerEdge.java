@@ -11,17 +11,19 @@ import iot.sgh.data.DataCentre;
 import iot.sgh.data.Irrigation;
 import iot.sgh.events.HumidityIncreasedEvent;
 import iot.sgh.events.LowHumidityEvent;
-import iot.sgh.events.TimeExcedeedEvent;
-import iot.sgh.utility.eventloop.Observable;
+import iot.sgh.observables.ObservableHumiditySensor;
+import iot.sgh.observables.ObservableTimer;
 
 public class SocketServerEdge extends AbstractSocketServer {
 
     private final DataCentre data = DataCentre.getInstance();
-    private final Observable humiditySensor;
+    private final ObservableHumiditySensor humiditySensor;
+    private final ObservableTimer timer;
     
-    public SocketServerEdge(int port, String name, Observable humiditySensor) throws IOException {
+    public SocketServerEdge(int port, String name, ObservableHumiditySensor humiditySensor, ObservableTimer timer) throws IOException {
         super(port, name);
         this.humiditySensor = humiditySensor;
+        this.timer = timer;
     }
 
     @Override
@@ -35,14 +37,12 @@ public class SocketServerEdge extends AbstractSocketServer {
             final Optional<Irrigation> lastIrrig = data.getLastIrrigation();
             if (hum < DataCentre.MIN_HUMIDITY && lastIrrig.map(i -> i.isFinished()).orElse(true)) {
                 humiditySensor.notifyEvent(new LowHumidityEvent());
+                timer.scheduleTick(DataCentre.MAX_EROGATION_TIME);
             } else if (lastIrrig.filter(i -> !i.isFinished())
                                 .filter(i -> hum - i.getBeginHumidity() > DataCentre.DELTA_HUMIDITY)
                                 .isPresent()) {
                 humiditySensor.notifyEvent(new HumidityIncreasedEvent());
-            } else if (lastIrrig.filter(i -> !i.isFinished())
-                                .filter(i -> now.toEpochMilli() - i.getBeginTime().toEpochMilli() > DataCentre.MAX_EROGATION_TIME)
-                                .isPresent()) {                
-                humiditySensor.notifyEvent(new TimeExcedeedEvent());
+                timer.stop();
             }
         } catch (NumberFormatException e) {
             System.out.println("Not a Number");

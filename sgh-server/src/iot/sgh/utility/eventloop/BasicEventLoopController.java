@@ -5,21 +5,21 @@ import java.util.concurrent.BlockingQueue;
 
 public abstract class BasicEventLoopController extends Thread implements Observer {
 	
-	public static final int defaultEventQueueSize = 50;
+	public static final int DEFAULT_EVENT_QUEUE_SIZE = 50;
 	protected BlockingQueue<Event> eventQueue;
 	
-	protected BasicEventLoopController(int size){
+	protected BasicEventLoopController(int size) {
 		eventQueue = new ArrayBlockingQueue<Event>(size);
 	}
 
 	protected BasicEventLoopController(){
-		this(defaultEventQueueSize);
+		this(DEFAULT_EVENT_QUEUE_SIZE);
 	}
 	
 	abstract protected void processEvent(Event ev);
 	
-	public void run(){
-		while (true){
+	public void run() {
+		while (true) {
 			try {
 				Event ev = this.waitForNextEvent();
 				this.processEvent(ev);
@@ -29,11 +29,11 @@ public abstract class BasicEventLoopController extends Thread implements Observe
 		}
 	}
 	
-	protected void startObserving(Observable object){
+	protected void startObserving(Observable object) {
 		object.addObserver(this);
 	}
 
-	protected void stopObserving(Observable object){
+	protected void stopObserving(Observable object) {
 		object.removeObserver(this);
 	}
 	
@@ -45,7 +45,7 @@ public abstract class BasicEventLoopController extends Thread implements Observe
 		return eventQueue.poll();
 	}
 	
-	public boolean notifyEvent(Event ev){
+	public boolean notifyEvent(Event ev) {
 		return eventQueue.offer(ev);
 	}
 }

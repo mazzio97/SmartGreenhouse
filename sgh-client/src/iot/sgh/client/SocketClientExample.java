@@ -1,4 +1,4 @@
-package org.sgh.client;
+package iot.sgh.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class SocketClientExample {
         Socket socket;
         String msg = "";
         while (!msg.equals("exit")) {
-            socket = new Socket("192.168.178.113", 9875);
+            socket = new Socket("192.168.178.121", 9875);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             msg = in.readLine();
             System.out.println(msg);

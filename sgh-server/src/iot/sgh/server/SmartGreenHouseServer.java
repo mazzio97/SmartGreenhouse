@@ -27,7 +27,7 @@ public class SmartGreenHouseServer {
 		System.out.println(inetAddress.getHostAddress());
 
 
-//		new SocketServerGUI(9875, "GUI").start();
+		new SocketServerGUI(9875, "GUI").start();
         final ObservableHumiditySensor humiditySensor = new ObservableHumiditySensor();
         final ObservableTimer timer = new ObservableTimer();
 		new SocketServerEdge(5050, "ESP", humiditySensor, timer).start();

@@ -32,7 +32,7 @@ public class SocketServerEdge extends AbstractSocketServer {
         try {
             final Instant now = Instant.now();
             final float hum = Float.parseFloat(in.readLine());
-            System.out.println(hum);
+            //System.out.println(hum);
             data.recordHumidity(now, hum);
             final Optional<Irrigation> lastIrrig = data.getLastIrrigation();
             if (hum < DataCentre.MIN_HUMIDITY && lastIrrig.map(i -> i.isFinished()).orElse(true)) {

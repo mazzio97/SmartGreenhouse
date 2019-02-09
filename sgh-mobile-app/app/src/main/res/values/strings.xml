@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Green House Mobile</string>
+    <string name="manual_mode">Manual Mode</string>
+    <string name="humidity_level">Humidity Level: 66%</string>
+    <string name="select_flow_rate">Select desired water flow rate:</string>
+    <string name="min_flow">Minimum - 25 lt/min</string>
+    <string name="med_flow">Medium - 100 lt/min</string>
+    <string name="max_flow">Maximum - 250lt/min</string>
+    <string name="open_pump">Open Pump</string>
+    <string name="close_pump">Close Pump</string>
+</resources>

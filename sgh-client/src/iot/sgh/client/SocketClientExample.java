@@ -4,19 +4,38 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-public class SocketClientExample {
+public class SocketClientExample implements Runnable{
+	
+	private Thread thread;
+	private final String name;
+	private Socket socket;
+	
+	public SocketClientExample(String name) {
+		this.name = name;
+	}
 
-    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException{
-        Socket socket;
+
+	@Override
+	public void run(){
         String msg = "";
-        while (!msg.equals("exit")) {
-            socket = new Socket("192.168.178.121", 9875);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            msg = in.readLine();
+		while(true) {
+			try {
+				socket = new Socket("192.168.1.102", 9875);
+				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				msg = in.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
             System.out.println(msg);
+		}
+	}
+	
+    public void start () {
+    	System.out.println("Server " + name + " launched");
+        if (thread == null) {
+           thread = new Thread(this, name);
+           thread.start ();
         }
-        System.out.println("I'm going to die...");
-    }
+     }
 }

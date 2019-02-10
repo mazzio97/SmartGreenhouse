@@ -5,6 +5,7 @@ import iot.sgh.data.Flow;
 import iot.sgh.data.Report;
 import iot.sgh.events.HumidityIncreasedEvent;
 import iot.sgh.events.LowHumidityEvent;
+import iot.sgh.events.ModeChangedEvent;
 import iot.sgh.events.Tick;
 import iot.sgh.utility.eventloop.EventLoopControllerWithHandlers;
 import iot.sgh.utility.eventloop.Observable;

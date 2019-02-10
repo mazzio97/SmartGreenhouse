@@ -4,11 +4,11 @@
 #include "Arduino.h"
 #include "SoftwareSerial.h"
 
-class Msg {
+class BTMsg {
   String content;
 
 public:
-  Msg(const String& content){
+  BTMsg(const String& content){
     this->content = content;
   }
   
@@ -20,16 +20,17 @@ public:
 class BluetoothMsgService {
     
 public: 
-  BluetoothMsgService(int rxPin, int txPin);  
+  BluetoothMsgService(int rxPin, int txPin, int statusPin);  
   void init();  
   bool isMsgAvailable();
-  Msg* receiveMsg();
-  bool sendMsg(Msg msg);
+  BTMsg* receiveMsg();
+  void sendMsg(BTMsg msg);
+  bool isConnected();
 
 private:
+  int statusPin;
   String content;
   SoftwareSerial* channel;
-  
 };
 
 #endif

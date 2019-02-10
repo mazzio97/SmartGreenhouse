@@ -17,6 +17,9 @@
 #define LED1_PIN 13
 #define LED2_PIN 5
 #define LED3_PIN 12
+#define TX_PIN 2
+#define RX_PIN 3
+#define STATUS_PIN 4
 
 Scheduler sched;
 
@@ -25,7 +28,7 @@ void setup() {
 
 	MsgService.init();
 
-  Task* modeManagerTask = new ModeManagerTask(SONAR_ECHO_PIN, SONAR_TRIGGER_PIN);
+  Task* modeManagerTask = new ModeManagerTask(SONAR_ECHO_PIN, SONAR_TRIGGER_PIN, TX_PIN, RX_PIN, STATUS_PIN);
   modeManagerTask->init(100);
   sched.addTask(modeManagerTask);
 

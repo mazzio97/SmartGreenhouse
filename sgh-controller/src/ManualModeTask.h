@@ -8,11 +8,13 @@
 class ManualModeTask : public Task {
 
 public:
-	ManualModeTask(int ledPin);
+	ManualModeTask(int ledPin, int echoPin, int triggerPin);
 	void tick();
 
 private:
 	Light *led;
+	UltraSonicSensor *us;
+	enum TaskState {MM0, MM1, MM2, MM3} currTaskState;
 };
 
 #endif

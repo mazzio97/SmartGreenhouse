@@ -2,8 +2,9 @@
 #include "BluetoothMsgService.h"
 
 
-BluetoothMsgService::BluetoothMsgService(int rxPin, int txPin){
-  this->channel = new SoftwareSerial(rxPin, txPin);
+BluetoothMsgService::BluetoothMsgService(int txPin, int rxPin, int statusPin){
+  this->channel = new SoftwareSerial(txPin, rxPin);
+  this->statusPin = statusPin;
 }
 
 void BluetoothMsgService::init(){
@@ -11,7 +12,7 @@ void BluetoothMsgService::init(){
   this->channel->begin(9600);
 }
 
-bool BluetoothMsgService::sendMsg(Msg msg){
+void BluetoothMsgService::sendMsg(BTMsg msg){
   this->channel->println(msg.getContent());  
 }
 
@@ -19,11 +20,11 @@ bool BluetoothMsgService::isMsgAvailable(){
   return this->channel->available();
 }
 
-Msg* BluetoothMsgService::receiveMsg(){
+BTMsg* BluetoothMsgService::receiveMsg(){
   while (this->channel->available()) {
     char ch = (char) this->channel->read();
     if (ch == '\n'){
-      Msg* msg = new Msg(this->content);  
+      BTMsg* msg = new BTMsg(this->content);  
       this->content = "";
       return msg;    
     } else {
@@ -31,4 +32,8 @@ Msg* BluetoothMsgService::receiveMsg(){
     }
   }
   return NULL;  
+}
+
+bool BluetoothMsgService::isConnected() {
+  return digitalRead(this->statusPin) == HIGH;
 }

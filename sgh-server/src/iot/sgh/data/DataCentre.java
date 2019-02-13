@@ -16,6 +16,7 @@ public class DataCentre {
 
     private static DataCentre instance = null;
     
+    private Mode mode = Mode.AUTO;
     private final NavigableMap<Instant, Double> humidity = new TreeMap<>((k1, k2) -> Math.toIntExact(k1.toEpochMilli() - k2.toEpochMilli()));
     private final Deque<Irrigation> irrigation = new LinkedList<>();
     
@@ -43,6 +44,18 @@ public class DataCentre {
     
     public Entry<Instant, Double> getLastPerceivedHumidity() {
         return humidity.lastEntry();
+    }
+    
+    public void setMode(Mode m) {
+        this.mode = m;
+    }
+    
+    public void setMode(String m) {
+        setMode(Mode.get(m));
+    }
+    
+    public Mode getCurrMode() {
+        return this.mode;
     }
 
 }

@@ -1,7 +1,7 @@
 package iot.sgh.observables;
 
-import java.util.Observable;
+import iot.sgh.utility.eventloop.Observable;
 
-public class ObservableToggleMode extends Observable{
+public class ObservableToggleMode extends Observable {
 
 }

@@ -10,6 +10,8 @@ UltraSonicSensorImpl::UltraSonicSensorImpl(int echoPin, int triggerPin) {
 
 float UltraSonicSensorImpl::getDistance() {
 	digitalWrite(this->triggerPin, LOW);
+	unsigned long start = millis();
+  	while (millis() - start < 3) {}
 	delayMicroseconds(3);
 	digitalWrite(this->triggerPin, HIGH);
 	delayMicroseconds(5);

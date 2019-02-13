@@ -4,35 +4,17 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public abstract class AbstractSocketServer implements Runnable {
-	
-	private Thread thread;
-	private final String name;
-	private final ServerSocket server;
-	
-	public AbstractSocketServer(int port, String name) throws IOException {
+public abstract class AbstractSocketServer extends AbstractServerThread {
+	protected final ServerSocket server;
+	protected Socket socket;
+		
+	public AbstractSocketServer(String name, int port) throws IOException {
+		super(name, 1000);
 		this.server = new ServerSocket(port);
-		this.name = name;
 	}
 	
-	abstract void job(Socket socket) throws IOException, InterruptedException;
-	
-    public void run() {
-        while (true) {
-        	try {
-        		job(server.accept());
-        		Thread.sleep(1000);
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
-        }
-    }
-    
-    public void start () {
-    	System.out.println("Server " + name + " launched");
-        if (thread == null) {
-           thread = new Thread(this, name);
-           thread.start ();
-        }
-     }
+	protected void job() throws IOException {
+        socket = server.accept();
+	}
+
 }

@@ -2,6 +2,7 @@
 #define __MSGSERVICE__
 
 #include "Arduino.h"
+#include "SoftwareSerial.h"
 
 class Msg {
 
@@ -30,15 +31,30 @@ private:
 class Pattern {
 
 public:
-	virtual boolean match(const Msg& m) = 0;
+	Pattern(String key) {
+		this->keyword = key;
+		this->length = this->keyword.length();
+	}
+
+	Msg& withoutMatch(Msg& s) {
+		if (match(s)) {
+			String content = s.getContent();
+			s = Msg(content.substring(length, content.length()));
+		}
+		return s;
+	}
+
+	bool match(Msg& m) {
+		return m.getContent().substring(0, length) == keyword;
+	}
+
+private:
+	String keyword;
+	int length;
 };
 
-class MsgServiceClass {
-
+class SerialMsgService {
 public:
-	Msg* currentMsg;
-	bool msgAvailable;
-
 	void init();
 
 	bool isMsgAvailable();
@@ -48,9 +64,27 @@ public:
 	Msg* receiveMsg(Pattern& pattern);
 
 	void sendMsg(const String& msg);
+	Msg* currentMsg;
+	bool msgAvailable;
+private:
 };
 
-extern MsgServiceClass MsgService;
+class BluetoothMsgService {
+    
+public:
+	void init();  
+  	bool isMsgAvailable();
+  	Msg* receiveMsg();
+  	Msg* receiveMsg(Pattern& pattern);
+  	void sendMsg(Msg msg);
+
+private:
+  	String content;
+  	SoftwareSerial* channel;
+};
+
+extern SerialMsgService MsgService;
+extern BluetoothMsgService MsgServiceBT;
 
 #endif
 

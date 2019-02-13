@@ -3,7 +3,6 @@ package iot.sgh.server;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.Socket;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -13,11 +12,12 @@ public class SocketServerGUI extends AbstractSocketServer {
 	private DataCentre data = DataCentre.getInstance();
 
 	public SocketServerGUI(int port, String name) throws IOException {
-		super(port, name);
+		super(name, port);
 	}
 
 	@Override
-	void job(Socket socket) throws IOException, InterruptedException {
+	protected void job() throws IOException {
+	    super.job();
 	    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 	    ZonedDateTime zdt = ZonedDateTime.ofInstant(data.getLastPerceivedHumidity().getKey(), ZoneId.systemDefault());
 	    Double humidity = data.getLastPerceivedHumidity().getValue();
@@ -25,7 +25,6 @@ public class SocketServerGUI extends AbstractSocketServer {
 	    out.write(humidity + ":" + seconds);
 	    out.flush();
 	    socket.close();
-	    Thread.sleep(1000);
 	}
 
 }

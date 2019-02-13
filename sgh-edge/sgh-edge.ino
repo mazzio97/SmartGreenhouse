@@ -1,12 +1,12 @@
 #include <ESP8266WiFi.h>
 #include "DHT.h"
 
-#define NAME "EOLO - FRITZ!Box MC"
-#define PASS "98241153892377645827"
+#define NAME "Vodafone-A47870842"
+#define PASS "w57t646yt8mpwpw4"
 #define DHTPIN 4
 #define DHTTYPE DHT22
 
-const char* host = "192.168.178.113";
+const char* host = "192.168.1.13";
 WiFiClient client;
 //DHT dht(DHTPIN, DHTTYPE);
 
@@ -36,16 +36,16 @@ void setup() {
 void loop() {
   //float h = dht.readHumidity();
   float h = analogRead(A0) / 10;
-  if (client.connect(host, 5050))
-  {
+  if (client.connect(host, 5050)) {
     Serial.print("Connected to: ");
     Serial.println(host);
 
     Serial.println(h);
+    client.println(h);
 //    if (isnan(h)) {
 //      client.println("DHT read failed");
 //    } else {
-      client.println(h);
+//      client.println(h);
 //    }
   } else {
     Serial.println("Connection problems");

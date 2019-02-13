@@ -3,18 +3,16 @@
 
 #include "Task.h"
 #include "Light.h"
-#include "UltraSonicSensor.h"
 
 class ManualModeTask : public Task {
 
 public:
-	ManualModeTask(int ledPin, int echoPin, int triggerPin);
+	ManualModeTask(int ledPin);
 	void tick();
 
 private:
 	Light *led;
-	UltraSonicSensor *us;
-	enum TaskState {MM0, MM1, MM2, MM3} currTaskState;
+	enum TaskState {MM0, MM1} currTaskState;
 };
 
 #endif

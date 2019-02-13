@@ -4,7 +4,7 @@
 #include "ServoMotor.h"
 #include "ServoTimer2.h"
 
-#define DELTA 4
+#define DELTA 8
 
 class ServoMotorImpl: public ServoMotor {
 

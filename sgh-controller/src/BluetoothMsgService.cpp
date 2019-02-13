@@ -1,18 +1,23 @@
 #include <Arduino.h>
-#include "BluetoothMsgService.h"
+// #include "BluetoothMsgService.h"
+#include "MsgService.h"
 
+#define TX_PIN 2
+#define RX_PIN 6
 
-BluetoothMsgService::BluetoothMsgService(int txPin, int rxPin, int statusPin){
-  this->channel = new SoftwareSerial(txPin, rxPin);
-  this->statusPin = statusPin;
-}
+BluetoothMsgService MsgServiceBT;
 
-void BluetoothMsgService::init(){
+// BluetoothMsgService::BluetoothMsgService(int txPin, int rxPin){
+  
+// }
+
+void BluetoothMsgService::init() {
+  this->channel = new SoftwareSerial(TX_PIN, RX_PIN);
   this->content.reserve(256);
   this->channel->begin(9600);
 }
 
-void BluetoothMsgService::sendMsg(BTMsg msg){
+void BluetoothMsgService::sendMsg(Msg msg){
   this->channel->println(msg.getContent());  
 }
 
@@ -20,11 +25,11 @@ bool BluetoothMsgService::isMsgAvailable(){
   return this->channel->available();
 }
 
-BTMsg* BluetoothMsgService::receiveMsg(){
+Msg* BluetoothMsgService::receiveMsg(){
   while (this->channel->available()) {
     char ch = (char) this->channel->read();
     if (ch == '\n'){
-      BTMsg* msg = new BTMsg(this->content);  
+      Msg* msg = new Msg(this->content);  
       this->content = "";
       return msg;    
     } else {
@@ -34,6 +39,16 @@ BTMsg* BluetoothMsgService::receiveMsg(){
   return NULL;  
 }
 
-bool BluetoothMsgService::isConnected() {
-  return digitalRead(this->statusPin) == HIGH;
+Msg* BluetoothMsgService::receiveMsg(Pattern& pattern) {
+  while (this->channel->available()) {
+    char ch = (char) this->channel->read();
+    if (ch == '\n'){
+      Msg* msg = new Msg(this->content);  
+      this->content = "";
+      return &(pattern.withoutMatch(*msg));    
+    } else {
+      this->content += ch;      
+    }
+  }
+  return NULL;
 }

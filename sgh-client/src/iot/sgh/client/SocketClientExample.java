@@ -21,7 +21,7 @@ public class SocketClientExample implements Runnable{
         String msg = "";
 		while(true) {
 			try {
-				socket = new Socket("192.168.1.102", 9875);
+				socket = new Socket("192.168.1.13", 9875);
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				msg = in.readLine();
 			} catch (IOException e) {

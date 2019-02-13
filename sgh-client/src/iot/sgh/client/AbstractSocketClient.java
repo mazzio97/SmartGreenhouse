@@ -2,6 +2,7 @@ package iot.sgh.client;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public abstract class AbstractSocketClient implements Runnable {
 	
@@ -14,11 +15,15 @@ public abstract class AbstractSocketClient implements Runnable {
     public void run() {
         while (true) {
         	try {
-        		socket = new Socket("192.168.1.102", 9875);
+        		socket = new Socket("192.168.178.113", 9875);
         		job(socket);
         		Thread.sleep(1000);
-        	} catch (Exception e) {
-        		e.printStackTrace();
+        	} catch (UnknownHostException e) {
+        	    System.out.println("BRUHELLA");
+        	} catch (IOException e) {
+        	    System.out.println("BRIOLLA");
+        	} catch (InterruptedException e) {
+                System.out.println("BRIELLA");
         	}
         }
     }

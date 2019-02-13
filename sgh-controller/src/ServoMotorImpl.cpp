@@ -29,12 +29,12 @@ void ServoMotorImpl::open() {
   int newAngle = this->currAngle + DELTA;
   this->setPosition(newAngle);
   this->currAngle = newAngle >= 180 ? 180 : newAngle;
-	delay(15);
+  delayMicroseconds(10000);
 }
 
 void ServoMotorImpl::close() {
   int newAngle = this->currAngle - DELTA;
   this->setPosition(newAngle);
   this->currAngle = newAngle <= 0 ? 0 : newAngle;
-	delay(15);
+	delayMicroseconds(10000);
 }

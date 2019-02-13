@@ -3,25 +3,26 @@
 
 String content;
 
-MsgServiceClass MsgService;
+SerialMsgService MsgService;
 
-bool MsgServiceClass::isMsgAvailable() {
+bool SerialMsgService::isMsgAvailable() {
 	return msgAvailable;
 }
 
-Msg* MsgServiceClass::receiveMsg() {
+Msg* SerialMsgService::receiveMsg() {
 	if (msgAvailable) {
 		Msg* msg = currentMsg;
 		msgAvailable = false;
 		currentMsg = NULL;
 		content = "";
+		sendMsg("***" + msg->getContent() + "***");
 		return msg;
 	} else {
 		return NULL;
 	}
 }
 
-void MsgServiceClass::init() {
+void SerialMsgService::init() {
 	Serial.begin(9600);
 	content.reserve(256);
 	content = "";
@@ -29,7 +30,7 @@ void MsgServiceClass::init() {
 	msgAvailable = false;
 }
 
-void MsgServiceClass::sendMsg(const String& msg) {
+void SerialMsgService::sendMsg(const String& msg) {
 	Serial.println(msg);
 }
 
@@ -38,25 +39,26 @@ void serialEvent() {
 	while (Serial.available()) {
 		char ch = (char) Serial.read();
 		if (ch == '\n'){
-		MsgService.currentMsg = new Msg(content);
-		MsgService.msgAvailable = true;
+			MsgService.currentMsg = new Msg(content);
+			MsgService.msgAvailable = true;
 		} else {
-		content += ch;
+			content += ch;
 		}
 	}
 }
 
-bool MsgServiceClass::isMsgAvailable(Pattern& pattern) {
+bool SerialMsgService::isMsgAvailable(Pattern& pattern) {
 	return (msgAvailable && pattern.match(*currentMsg));
 }
 
-Msg* MsgServiceClass::receiveMsg(Pattern& pattern) {
+Msg* SerialMsgService::receiveMsg(Pattern& pattern) {
 	if (msgAvailable && pattern.match(*currentMsg)) {
 		Msg* msg = currentMsg;
 		msgAvailable = false;
 		currentMsg = NULL;
 		content = "";
-		return msg;
+		sendMsg("***" + msg->getContent() + "***");
+		return &(pattern.withoutMatch(*msg));
 	} else {
 		return NULL;
 	}

@@ -29,6 +29,7 @@ void ManualModeTask::tick() {
 				Msg* flow = MsgServiceBT.receiveMsg(supplyPattern2);
 				if (flow != NULL) {
 					GreenHouse::setFlowRate(flow->convertToInt());
+					MsgService.sendMsg("pump" + flow->getContent());
 				}
 			}
 			break;

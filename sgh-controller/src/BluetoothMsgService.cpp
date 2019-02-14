@@ -7,14 +7,11 @@
 
 BluetoothMsgService MsgServiceBT;
 
-// BluetoothMsgService::BluetoothMsgService(int txPin, int rxPin){
-  
-// }
-
 void BluetoothMsgService::init() {
   this->channel = new SoftwareSerial(TX_PIN, RX_PIN);
   this->content.reserve(256);
   this->channel->begin(9600);
+  this->content = "";
 }
 
 void BluetoothMsgService::sendMsg(Msg msg){
@@ -22,7 +19,7 @@ void BluetoothMsgService::sendMsg(Msg msg){
 }
 
 bool BluetoothMsgService::isMsgAvailable(){
-  return this->channel->available();
+  return this->content != "" || this->channel->available();
 }
 
 Msg* BluetoothMsgService::receiveMsg(){
@@ -40,15 +37,19 @@ Msg* BluetoothMsgService::receiveMsg(){
 }
 
 Msg* BluetoothMsgService::receiveMsg(Pattern& pattern) {
-  while (this->channel->available()) {
-    char ch = (char) this->channel->read();
-    if (ch == '\n'){
-      Msg* msg = new Msg(this->content);  
-      this->content = "";
-      return &(pattern.withoutMatch(*msg));    
-    } else {
-      this->content += ch;      
+  if (this->content == "") {
+    while (this->channel->available()) {
+      char ch = (char) this->channel->read();
+      if (ch != '\n'){
+        this->content += ch;    
+      }
     }
+  }
+  Msg* msg = new Msg(this->content);  
+  if (pattern.match(*msg)) {
+    msg = &pattern.withoutMatch(*msg);
+    this->content = "";
+    return msg;
   }
   return NULL;
 }

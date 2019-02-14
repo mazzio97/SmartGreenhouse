@@ -64,18 +64,21 @@ public:
 	Msg* receiveMsg(Pattern& pattern);
 
 	void sendMsg(const String& msg);
+
 	Msg* currentMsg;
 	bool msgAvailable;
-private:
 };
 
 class BluetoothMsgService {
     
 public:
-	void init();  
+	void init();
+
   	bool isMsgAvailable();
+
   	Msg* receiveMsg();
   	Msg* receiveMsg(Pattern& pattern);
+
   	void sendMsg(Msg msg);
 
 private:

@@ -26,14 +26,11 @@ void ManualModeTask::tick() {
 				this->currTaskState = MM0;
 				this->led->switchOff();
 			} else if (MsgServiceBT.isMsgAvailable()) {
-				MsgService.sendMsg("Almeno qui");
-				// int flow = GreenHouse::getBtms().receiveMsg()->convertToInt();
-				// GreenHouse::setFlowRate(flow);
+				Msg* flow = MsgServiceBT.receiveMsg(supplyPattern2);
+				if (flow != NULL) {
+					GreenHouse::setFlowRate(flow->convertToInt());
+				}
 			}
-			// else if (MsgService.isMsgAvailable(humidityPattern)) {
-			// 	String msg = MsgService.receiveMsg(humidityPattern)->getContent();
-			// 	GreenHouse::getBtms().sendMsg(msg);
-			// }
 			break;
 	}
 	

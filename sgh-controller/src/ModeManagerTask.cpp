@@ -13,42 +13,41 @@ ModeManagerTask::ModeManagerTask(int echoPin, int triggerPin) {
 
 void ModeManagerTask::tick() {
 	switch (this->taskState) {
-		case MM0: {
+		case MM0:
 			if (this->us->getDistance() <= DIST) {
 				this->taskState = MM1;
 			}
 			break;
-		}
 
 		case MM1: 
 			if (this->us->getDistance() >= DIST) {
 				this->taskState = MM0;
 			} else if(MsgServiceBT.isMsgAvailable()) {
-				Msg* prova = MsgServiceBT.receiveMsg(btStatusPattern);
-				MsgService.sendMsg("***" + prova->getContent() + "***");
-				if (prova->getContent() == "ON") {
+				Msg* status = MsgServiceBT.receiveMsg(btStatusPattern);
+				if (status != NULL && status->getContent() == "ON") {
 					this->taskState = MM2;
 					GreenHouse::changeState(State::MANUAL);
 					MsgService.sendMsg((String)MSG_TAG + "manual");
+					Msg conn("CONNECTED");
+					MsgService.sendMsg(conn.getContent());
+					MsgServiceBT.sendMsg(conn);
 				}
 			}
 			break;
 
 		case MM2:
-			if(MsgServiceBT.isMsgAvailable()
-			   && MsgServiceBT.receiveMsg(btStatusPattern)->getContent() == "OFF") {
-				//this->taskState = MM3;
-				MsgService.sendMsg((String)MSG_TAG + "auto");
-				this->taskState = MM0;
-				GreenHouse::changeState(State::AUTO);
+			if(MsgServiceBT.isMsgAvailable()) {
+				Msg* status = MsgServiceBT.receiveMsg(btStatusPattern);
+				// MsgService.sendMsg(status->getContent());
+				if (status != NULL && status->getContent() == "OFF") {
+					this->taskState = MM0;
+					GreenHouse::changeState(State::AUTO);
+					MsgService.sendMsg((String)MSG_TAG + "auto");
+					Msg disc("DISCONNECTED");
+					MsgService.sendMsg(disc.getContent());
+					MsgServiceBT.sendMsg(disc);
+				}
 			}
-			break;
-		case MM3: 
-			// if (MsgService.isMsgAvailable()) {
-			// 	MsgService.flush();
-			// } else {
-			// 	MsgService.sendMsg("IO SONO PRONTO");
-			// }
 			break;
 	}
 }

@@ -15,7 +15,7 @@ public:
 
 private:
 	UltraSonicSensor *us;
-	enum TaskState {MM0, MM1, MM2, MM3} taskState;
+	enum TaskState {MM0, MM1, MM2} taskState;
 };
 
 #endif

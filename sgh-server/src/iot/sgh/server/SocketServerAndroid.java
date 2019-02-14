@@ -1,16 +1,23 @@
 package iot.sgh.server;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 import iot.sgh.data.DataCentre;
 
-public class SerialSender extends AbstractServerThread {
-    private final static String HUMIDITY_TAG = "hum";
-    public SerialSender(String name) {
-        super(name, 1000);
+public class SocketServerAndroid extends AbstractSocketServer {
+    public SocketServerAndroid(String name) throws IOException {
+        super(name, 6060);
     }
 
     @Override
-    void job() throws Exception {
-        //System.out.println(HUMIDITY_TAG + String.valueOf(DataCentre.getInstance().getLastPerceivedHumidity().getValue()));
-        // SmartGreenHouseServer.getChannel().sendMsg(HUMIDITY_TAG + String.valueOf(DataCentre.getInstance().getLastPerceivedHumidity().getValue()));
+    protected void job() throws Exception {
+        super.job();
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        Integer humidity = DataCentre.getInstance().getLastPerceivedHumidity().getValue().intValue();
+        out.write(humidity.toString());
+        out.flush();
+        socket.close();
     }
 }

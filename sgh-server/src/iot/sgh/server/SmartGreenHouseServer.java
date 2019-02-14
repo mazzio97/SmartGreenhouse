@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import iot.sgh.observables.ObservableHumiditySensor;
 import iot.sgh.observables.ObservableTimer;
-import iot.sgh.observables.ObservableToggleMode;
 import iot.sgh.utility.serial.SerialCommChannel;
 import jssc.SerialPortList;
 
@@ -31,10 +30,10 @@ public class SmartGreenHouseServer {
 		new SocketServerGUI(9875, "GUI").start();
         final ObservableHumiditySensor humiditySensor = new ObservableHumiditySensor();
         final ObservableTimer timer = new ObservableTimer();
-        final ObservableToggleMode mode = new ObservableToggleMode();
 		new SocketServerEdge(5050, "ESP", humiditySensor, timer).start();
-		new SerialReceiver("ARDUINO", mode).start();
-	    new SmartGreenHouseController(humiditySensor, timer, mode).start();
+		new SerialReceiver("ARDUINO").start();
+	    new SmartGreenHouseController(humiditySensor, timer).start();
+	    new SocketServerAndroid("ANDROID").start();
 	}
     
     public static SerialCommChannel getChannel() {

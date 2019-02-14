@@ -2,11 +2,9 @@ package iot.sgh.server;
 
 import iot.sgh.data.DataCentre;
 import iot.sgh.data.Flow;
-import iot.sgh.data.Mode;
 import iot.sgh.data.Report;
 import iot.sgh.events.HumidityIncreasedEvent;
 import iot.sgh.events.LowHumidityEvent;
-import iot.sgh.events.ModeChangedEvent;
 import iot.sgh.events.Tick;
 import iot.sgh.utility.eventloop.EventLoopControllerWithHandlers;
 import iot.sgh.utility.eventloop.Observable;
@@ -14,12 +12,10 @@ import iot.sgh.utility.eventloop.Observable;
 public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
 
     private final DataCentre data = DataCentre.getInstance();
-    private SerialSender sendHumiditySerial;
 
-    public SmartGreenHouseController(final Observable humiditySensor, final Observable timer, final Observable mode) {
+    public SmartGreenHouseController(final Observable humiditySensor, final Observable timer) {
         startObserving(humiditySensor);
         startObserving(timer);
-        startObserving(mode);
     }
     
     @Override
@@ -38,13 +34,6 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
                 i.makeReport(Report.TIME_EXCEDEED);
                 System.out.println(i.getReport().get().toString());
             });
-        }).addHandler(ModeChangedEvent.class, (ev) -> {
-            if (data.getCurrMode() == Mode.AUTO) {
-                sendHumiditySerial.stop();
-            } else {
-                sendHumiditySerial = new SerialSender("SENDER");
-                sendHumiditySerial.start();
-            }
         });
     }
     

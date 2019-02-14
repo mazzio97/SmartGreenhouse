@@ -17,7 +17,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/humidityText" />
 
     <ProgressBar
         android:id="@+id/humidityValue"
@@ -31,7 +31,7 @@
         android:scaleY="4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/manualMode" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/humidityText"
@@ -55,17 +55,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:text="@string/select_flow_rate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/humidityText" />
+        app:layout_constraintTop_toBottomOf="@+id/manualMode" />
 
     <RadioGroup
         android:id="@+id/waterFlowRateRadio"

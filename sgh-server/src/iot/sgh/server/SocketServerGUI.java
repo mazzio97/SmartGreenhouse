@@ -16,7 +16,7 @@ public class SocketServerGUI extends AbstractSocketServer {
 	}
 
 	@Override
-	protected void job() throws IOException {
+	protected void job() throws Exception {
 	    super.job();
 	    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 	    ZonedDateTime zdt = ZonedDateTime.ofInstant(data.getLastPerceivedHumidity().getKey(), ZoneId.systemDefault());

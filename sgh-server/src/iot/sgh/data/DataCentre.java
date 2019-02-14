@@ -20,9 +20,7 @@ public class DataCentre {
     private final NavigableMap<Instant, Double> humidity = new TreeMap<>((k1, k2) -> Math.toIntExact(k1.toEpochMilli() - k2.toEpochMilli()));
     private final Deque<Irrigation> irrigation = new LinkedList<>();
     
-    private DataCentre() {
-        
-    }
+    private DataCentre() {}
    
     public static DataCentre getInstance() { 
     	if (instance == null) 

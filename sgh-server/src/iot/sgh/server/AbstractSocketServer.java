@@ -13,7 +13,7 @@ public abstract class AbstractSocketServer extends AbstractServerThread {
 		this.server = new ServerSocket(port);
 	}
 	
-	protected void job() throws IOException {
+	protected void job() throws Exception {
         socket = server.accept();
 	}
 

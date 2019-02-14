@@ -8,16 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.UUID;
 
-import iot.sgh.mobile.utils.BluetoothReceiver;
 import iot.sgh.mobile.utils.C;
 import unibo.btlib.BluetoothChannel;
 import unibo.btlib.ConnectionTask;
@@ -47,14 +48,45 @@ public class MainActivity extends AppCompatActivity {
 
         final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if(btAdapter != null && !btAdapter.isEnabled()){
+        if(btAdapter != null && !btAdapter.isEnabled()) {
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), C.bluetooth.ENABLE_BT_REQUEST);
         }
         initUI();
 
-        flowAmount = 0;
+        new Thread(() -> {
+            while(true) {
+                new HumidityRetriever().execute();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        flowAmount = 25;
         pumpOpened = false;
     }
+
+    private class HumidityRetriever extends AsyncTask<Void, Void, Void> {
+        private Socket socket;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                socket = new Socket("192.168.1.13", 6060);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String hum = in.readLine();
+                humidityValue.setProgress(Integer.parseInt(hum));
+                humidityText.setText(getString(R.string.humidity_level) + " " + hum + "%");
+                socket.close();
+
+            } catch (Exception e) {
+                System.err.println(Thread.interrupted());
+            }
+            return null;
+        }
+    }
+
 
     private void initUI() {
         manualMode = findViewById(R.id.manualMode);
@@ -70,9 +102,6 @@ public class MainActivity extends AppCompatActivity {
             if (isChecked) {
                 try {
                     connectToBTServer();
-                    toggleWidgets(true);
-
-
                 } catch (BluetoothDeviceNotFound bluetoothDeviceNotFound) {
                     bluetoothDeviceNotFound.printStackTrace();
                 }
@@ -84,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         waterFlowRateRadio.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
+            switch (group.indexOfChild(findViewById(checkedId))) {
                 case 0:
                     flowAmount = 25;
                     break;
@@ -103,15 +132,16 @@ public class MainActivity extends AppCompatActivity {
         togglePumpButton.setOnClickListener((e) -> {
             if (!pumpOpened) {
                 btChannel.sendMessage("sup" + flowAmount);
+                togglePumpButton.setText(R.string.close_pump);
             } else {
                 btChannel.sendMessage("sup0");
+                togglePumpButton.setText(R.string.open_pump);
             }
+            pumpOpened = !pumpOpened;
         });
     }
 
     private void toggleWidgets(boolean enable) {
-        humidityValue.setVisibility(enable ? View.VISIBLE : View.GONE);
-        humidityText.setVisibility(enable ? View.VISIBLE : View.GONE);
         waterFlowRateText.setEnabled(enable);
         for (int i = 0; i < waterFlowRateRadio.getChildCount(); i++) {
             waterFlowRateRadio.getChildAt(i).setEnabled(enable);
@@ -145,10 +175,14 @@ public class MainActivity extends AppCompatActivity {
                 btChannel.registerListener(new RealBluetoothChannel.Listener() {
                     @Override
                     public void onMessageReceived(String receivedMessage) {
-                        humidityValue.setProgress(convertToInt(receivedMessage));
-                        Log.d(C.APP_LOG_TAG, "***" + receivedMessage + "***");
-                        humidityText.setText(receivedMessage);
-                        Log.d(C.APP_LOG_TAG, String.format("> [RECEIVED from %s] %s\n", btChannel.getRemoteDeviceName(), convertToInt(receivedMessage)));
+                        receivedMessage = receivedMessage.trim();
+                        if (receivedMessage.equals("CONNECTED")) {
+                            toggleWidgets(true);
+                        }
+                        else if (receivedMessage.equals("DISCONNECTED")) {
+                            toggleWidgets(false);
+                        }
+                        Log.d(C.APP_LOG_TAG, String.format("> [RECEIVED from %s] %s\n", btChannel.getRemoteDeviceName(), receivedMessage));
                     }
 
                     @Override
@@ -165,14 +199,4 @@ public class MainActivity extends AppCompatActivity {
         }).execute();
     }
 
-    // Don't know why Integer.parseInt of a correct number String throws NumberFormatException
-    private int convertToInt(String s) {
-        int res = 0;
-        int msgLength = s.length();
-        for (int i = msgLength - 2; i >= 0 ; i--) {
-            char c = s.charAt(i);
-            res += ((c - 48) * Math.pow(10, msgLength - i - 2));
-        }
-        return res;
-    }
 }

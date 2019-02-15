@@ -3,31 +3,20 @@ package iot.sgh.client;
 import java.io.IOException;
 import java.net.Socket;
 
-public abstract class AbstractSocketClient implements Runnable {
-	
-	private Thread thread;
-	private final String name = "GUI";
-	private Socket socket;
-	
-	abstract void job(Socket socket) throws IOException, InterruptedException;
-	
-    public void run() {
-        while (true) {
-        	try {
-        		socket = new Socket("192.168.1.13", 4040);
-        		job(socket);
-        		Thread.sleep(1000);
-        	} catch (Exception e) {
-        	    e.printStackTrace();
-        	}
-        }
+public abstract class AbstractSocketClient extends AbstractThread {
+
+    private final String ip;
+    private final int port;
+    protected Socket socket;
+
+    public AbstractSocketClient(String name, String ip, int port) {
+        super(name, 1000);
+        this.ip = ip;
+        this.port = port;
     }
     
-    public void start () {
-    	System.out.println("Client " + name + " launched");
-        if (thread == null) {
-           thread = new Thread(this, name);
-           thread.start();
-        }
-     }
+    protected void job() throws IOException {
+        this.socket = new Socket(ip, port);
+    }
+	
 }

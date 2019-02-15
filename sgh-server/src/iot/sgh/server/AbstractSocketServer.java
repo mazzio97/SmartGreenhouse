@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public abstract class AbstractSocketServer extends AbstractServerThread {
+public abstract class AbstractSocketServer extends AbstractThread {
 	protected final ServerSocket server;
 	protected Socket socket;
 		

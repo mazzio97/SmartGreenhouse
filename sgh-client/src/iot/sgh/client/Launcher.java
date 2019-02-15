@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application{
+public class Launcher extends Application{
     private static final String URL = "/iot/sgh/layout/SmartGreenHouse.fxml";
     private static Stage primaryStage;
 
@@ -17,7 +17,7 @@ public class Main extends Application{
         primaryStage = stage;
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Smart Green House");
-        loadStage(Main.class.getResource(URL));
+        loadStage(Launcher.class.getResource(URL));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
@@ -25,7 +25,6 @@ public class Main extends Application{
     public static void main(String[] args) throws IOException {
         launch();
     }
-
 
     public static Scene loadStage(URL url) {
         Scene scene = null;

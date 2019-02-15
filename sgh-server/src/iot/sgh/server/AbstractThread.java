@@ -1,14 +1,14 @@
-package iot.sgh.client;
+package iot.sgh.server;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class AbstractServerThread implements Runnable {
+public abstract class AbstractThread implements Runnable {
     protected Thread thread;
-    private final String name;
+    protected final String name;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final int sleepTime;
 
-    public AbstractServerThread(String name, int sleepTime) {
+    public AbstractThread(String name, int sleepTime) {
         this.name = name;
         this.sleepTime = sleepTime;
     }
@@ -35,7 +35,7 @@ public abstract class AbstractServerThread implements Runnable {
         if (thread == null) {
             thread = new Thread(this, name);
             thread.start();
-            System.out.println("Server " + name + " launched");
-        }
+            System.out.println(name + " launched");
+        } 
     }
 }

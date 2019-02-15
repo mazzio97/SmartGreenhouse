@@ -13,7 +13,7 @@ import iot.sgh.observables.ObservableModeChange;
 import iot.sgh.observables.ObservablePump;
 import iot.sgh.utility.serial.SerialCommChannel;
 
-public class SerialReceiver extends AbstractServerThread {
+public class SerialReceiver extends AbstractThread {
 
     private static final String ONLY_NUMBERS = "[^0-9]";
     private static final String ONLY_LETTERS_AND_PUNCTUATION = "[^a-zA-Z!.: ]";

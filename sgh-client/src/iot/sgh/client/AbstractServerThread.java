@@ -1,4 +1,4 @@
-package iot.sgh.server;
+package iot.sgh.client;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,6 +36,6 @@ public abstract class AbstractServerThread implements Runnable {
             thread = new Thread(this, name);
             thread.start();
             System.out.println("Server " + name + " launched");
-        } 
+        }
     }
 }

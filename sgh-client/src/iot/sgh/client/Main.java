@@ -1,5 +1,6 @@
 package iot.sgh.client;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -21,7 +22,7 @@ public class Main extends Application{
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         launch();
     }
 

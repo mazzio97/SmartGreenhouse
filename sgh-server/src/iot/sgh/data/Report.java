@@ -1,7 +1,7 @@
 package iot.sgh.data;
 
 public enum Report {
-    TIME_EXCEDEED("Maximum time for irrigation reached");
+    TIME_EXCEDEED("Time Excedeed");
     
     private String message;
     

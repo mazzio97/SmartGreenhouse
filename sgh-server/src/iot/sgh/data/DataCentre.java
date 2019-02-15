@@ -1,9 +1,11 @@
 package iot.sgh.data;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -38,6 +40,10 @@ public class DataCentre {
 
     public Optional<Irrigation> getLastIrrigation() {
         return Optional.ofNullable(irrigation.peekLast());
+    }
+    
+    public Collection<Irrigation> getExecutedIrrigations() {
+        return irrigation.stream().filter(i -> i.getEndTime().isPresent()).collect(Collectors.toList());
     }
     
     public Entry<Instant, Double> getLastPerceivedHumidity() {

@@ -2,6 +2,7 @@ package iot.sgh.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
+
 import iot.sgh.observables.ObservableHumiditySensor;
 import iot.sgh.observables.ObservableModeChange;
 import iot.sgh.observables.ObservablePump;
@@ -26,18 +27,18 @@ public class SmartGreenHouseServer {
             System.exit(-1);
         }
         
-        System.out.println(InetAddress.getLocalHost());
+        System.out.println(InetAddress.getLocalHost().getHostAddress());
 
         final ObservableHumiditySensor humiditySensor = new ObservableHumiditySensor();
         final ObservableTimer timer = new ObservableTimer();
         final ObservableModeChange modeChange = new ObservableModeChange();
         final ObservablePump pump = new ObservablePump();
         new SmartGreenHouseController(humiditySensor, timer, modeChange, pump).start();
-
-        new SocketServerGUI(9875, "GUI").start();
+        
+        new SocketServerGUI(4040, "GUI").start();
         new SocketServerEdge(5050, "ESP", humiditySensor, timer).start();
         new SerialReceiver("ARDUINO", modeChange, pump).start();
-        new SocketServerAndroid("ANDROID").start();
+        new SocketServerAndroid(6060, "ANDROID").start();
     }
 
     public static SerialCommChannel getChannel() {

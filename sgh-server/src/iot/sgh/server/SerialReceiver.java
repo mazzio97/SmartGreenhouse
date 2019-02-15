@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import iot.sgh.data.DataCentre;
 import iot.sgh.data.Mode;
 import iot.sgh.events.AutoModeEvent;
 import iot.sgh.events.ManualCloseEvent;
@@ -12,7 +11,6 @@ import iot.sgh.events.ManualModeEvent;
 import iot.sgh.events.ManualOpenEvent;
 import iot.sgh.observables.ObservableModeChange;
 import iot.sgh.observables.ObservablePump;
-import iot.sgh.utility.eventloop.Observable;
 import iot.sgh.utility.serial.SerialCommChannel;
 
 public class SerialReceiver extends AbstractServerThread {

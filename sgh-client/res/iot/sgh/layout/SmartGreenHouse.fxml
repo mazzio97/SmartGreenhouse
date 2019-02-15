@@ -5,35 +5,87 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-	prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1"
+<Pane
+	maxHeight="-Infinity"
+	maxWidth="-Infinity"
+	minHeight="-Infinity"
+	minWidth="-Infinity"
+	prefHeight="720.0"
+	prefWidth="1280.0"
 	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="iot.sgh.client.SmartGreenHouseController">
+	fx:controller="iot.sgh.client.SmartGreenHouseClient">
 	<children>
-		<VBox prefHeight="600.0" prefWidth="800.0">
+		<VBox
+			prefHeight="720.0"
+			prefWidth="1280.0">
 			<children>
-				<LineChart fx:id="chart" prefHeight="540.0"
-					prefWidth="800.0">
+				<LineChart
+					fx:id="chart"
+					prefHeight="640.0">
 					<xAxis>
-						<NumberAxis side="BOTTOM" fx:id="xAxis" />
+						<NumberAxis
+							side="BOTTOM"
+							fx:id="xAxis" />
 					</xAxis>
 					<yAxis>
-						<NumberAxis fx:id="yAxis" side="LEFT" />
+						<NumberAxis
+							fx:id="yAxis"
+							side="LEFT" />
 					</yAxis>
+					<VBox.margin>
+						<Insets right="10.0" />
+					</VBox.margin>
 				</LineChart>
-				<HBox prefHeight="60.0" prefWidth="800.0">
+				<HBox
+					prefHeight="90.0"
+					prefWidth="1200.0">
 					<children>
-						<Label prefHeight="60.0" prefWidth="45.0" text="Data -&gt; " />
-						<Label fx:id="dateLabel" prefHeight="60.0" prefWidth="80.0" />
-						<Label prefHeight="60.0" prefWidth="40.0" text="Ora -&gt; " />
-						<Label fx:id="hourLabel" prefHeight="92.0" prefWidth="80.0" />
-						<Label prefHeight="60.0" prefWidth="60.0" text="Mode -&gt; ">
+						<Label
+							prefHeight="90.0"
+							prefWidth="65.0"
+							text="Data -&gt; ">
+							<font>
+								<Font size="14.0" />
+							</font>
+						</Label>
+						<Label
+							fx:id="dateLabel"
+							prefHeight="90.0"
+							prefWidth="150.0">
+							<HBox.margin>
+								<Insets
+									left="5.0"
+									right="5.0" />
+							</HBox.margin>
+						</Label>
+						<Label
+							prefHeight="90.0"
+							prefWidth="55.0"
+							text="Ora -&gt; ">
+							<font>
+								<Font size="14.0" />
+							</font>
+						</Label>
+						<Label
+							fx:id="hourLabel"
+							prefHeight="90.0"
+							prefWidth="150.0">
+							<HBox.margin>
+								<Insets
+									left="5.0"
+									right="5.0" />
+							</HBox.margin>
+						</Label>
+						<Label
+							prefHeight="90.0"
+							prefWidth="70.0"
+							text="Mode -&gt; ">
 							<HBox.margin>
 								<Insets />
 							</HBox.margin>
@@ -41,37 +93,66 @@
 								<Font size="14.0" />
 							</font>
 						</Label>
-						<Label fx:id="modeLabel" prefHeight="60.0" prefWidth="100.0"
+						<Label
+							fx:id="modeLabel"
+							prefHeight="90.0"
+							prefWidth="150.0"
 							text="AUTO">
 							<font>
 								<Font size="14.0" />
 							</font>
+							<HBox.margin>
+								<Insets
+									left="5.0"
+									right="5.0" />
+							</HBox.margin>
 						</Label>
-						<Label fx:id="waterFlowLabel" prefHeight="60.0"
-							prefWidth="90.0" text="Waterflow -&gt; ">
+						<Label
+							fx:id="waterFlowLabel"
+							prefHeight="90.0"
+							prefWidth="100.0"
+							text="Waterflow -&gt; ">
 							<font>
 								<Font size="14.0" />
 							</font>
 						</Label>
-						<Label fx:id="waterFlowValueLabel" prefHeight="60.0"
-							prefWidth="76.0" text="0">
-							<font>
-								<Font size="14.0" />
-							</font>
-						</Label>
-						<Button fx:id="historyButton" alignment="CENTER"
-							contentDisplay="CENTER" mnemonicParsing="false" opacity="0.9"
-							prefHeight="30.0" prefWidth="66.0" text="History">
+						<Label
+							fx:id="waterFlowValueLabel"
+							prefHeight="90.0"
+							prefWidth="150.0">
 							<font>
 								<Font size="14.0" />
 							</font>
 							<HBox.margin>
-								<Insets left="100.0" top="15.0" />
+								<Insets
+									left="5.0"
+									right="5.0" />
+							</HBox.margin>
+						</Label>
+						<Separator
+							opacity="0.0"
+							prefWidth="200.0" />
+						<Button
+							fx:id="historyButton"
+							alignment="CENTER"
+							contentDisplay="CENTER"
+							mnemonicParsing="false"
+							opacity="0.9"
+							prefHeight="50.0"
+							prefWidth="100.0"
+							text="History">
+							<font>
+								<Font size="14.0" />
+							</font>
+							<HBox.margin>
+								<Insets top="15.0" />
 							</HBox.margin>
 						</Button>
 					</children>
 					<VBox.margin>
-						<Insets left="50.0" />
+						<Insets
+							left="50.0"
+							right="30.0" />
 					</VBox.margin>
 				</HBox>
 			</children>

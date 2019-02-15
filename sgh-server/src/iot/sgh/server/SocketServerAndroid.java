@@ -7,8 +7,8 @@ import java.io.OutputStreamWriter;
 import iot.sgh.data.DataCentre;
 
 public class SocketServerAndroid extends AbstractSocketServer {
-    public SocketServerAndroid(String name) throws IOException {
-        super(name, 6060);
+    public SocketServerAndroid(int port, String name) throws IOException {
+        super(name, port);
     }
 
     @Override

@@ -26,5 +26,4 @@ public class SocketServerGUI extends AbstractSocketServer {
 	    out.flush();
 	    socket.close();
 	}
-
 }

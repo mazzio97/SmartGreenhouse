@@ -1,6 +1,8 @@
 package iot.sgh.data;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -48,6 +50,10 @@ public class Irrigation {
         return this.end.map(e -> e.getKey().toEpochMilli() - begin.getKey().toEpochMilli());
     }
     
+    public Optional<Double> getHumidityDifference() {
+        return this.end.map(e -> e.getValue() - begin.getValue());        
+    }
+    
     public void makeReport(Report r) {
         this.report = Optional.of(r);
     }
@@ -58,7 +64,25 @@ public class Irrigation {
     
     @Override
     public String toString() {
-        return this.getBeginTime().toString() + " -> " + this.getBeginHumidity();
+        return "Date: " + getDateFromInstant(this.getBeginTime()) + "\n" +
+               "Period: " + getTimeFromInstant(this.getBeginTime()) + " -> " + this.getEndTime().map(t -> getTimeFromInstant(t)).orElse("") + "\n" +
+               "Flow: " + this.getFlow() + " lt/min\n" + 
+               "Hum. Difference: " + getHumidityDifference().map(d -> d.toString() + "%").orElse("UNDEFINED") + "\n" +
+               getReport().map(r -> "Report: " + r.getMessage()).orElse("");
+    }
+    
+    private final String getTimeFromInstant(Instant i) {
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(i, ZoneId.systemDefault());
+        return String.format("%02d", zdt.getHour()) + ":" + 
+               String.format("%02d", zdt.getMinute()) + ":" + 
+               String.format("%02d", zdt.getSecond() + 1);
+    }
+    
+    private final String getDateFromInstant(Instant i) {
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(i, ZoneId.systemDefault());
+        return String.format("%02d", zdt.getDayOfMonth()) + "/" + 
+               String.format("%02d", zdt.getMonthValue()) + "/" + 
+               String.valueOf(zdt.getYear());
     }
 
 }

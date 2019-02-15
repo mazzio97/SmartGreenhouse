@@ -2,7 +2,6 @@
 #include "MsgService.h"
 
 String content;
-
 SerialMsgService MsgService;
 
 bool SerialMsgService::isMsgAvailable() {
@@ -15,7 +14,6 @@ Msg* SerialMsgService::receiveMsg() {
 		msgAvailable = false;
 		currentMsg = NULL;
 		content = "";
-		sendMsg("***" + msg->getContent() + "***");
 		return msg;
 	} else {
 		return NULL;
@@ -57,7 +55,6 @@ Msg* SerialMsgService::receiveMsg(Pattern& pattern) {
 		msgAvailable = false;
 		currentMsg = NULL;
 		content = "";
-		sendMsg("***" + msg->getContent() + "***");
 		return &(pattern.withoutMatch(*msg));
 	} else {
 		return NULL;

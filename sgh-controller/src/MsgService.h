@@ -72,7 +72,7 @@ public:
 class BluetoothMsgService {
     
 public:
-	void init();
+	void init(int txPin, int rxPin);
 
   	bool isMsgAvailable();
 

@@ -4,14 +4,14 @@
 #include "UltraSonicSensorImpl.h"
 #include "GreenHouse.h"
 
-Pattern btStatusPattern("status");
-
 ModeManagerTask::ModeManagerTask(int echoPin, int triggerPin) {
 	this->taskState = MM0;
 	this->us = new UltraSonicSensorImpl(echoPin, triggerPin);
 }
 
 void ModeManagerTask::tick() {
+	Pattern statusPattern("status");
+
 	switch (this->taskState) {
 		case MM0:
 			if (this->us->getDistance() <= DIST) {
@@ -23,7 +23,7 @@ void ModeManagerTask::tick() {
 			if (this->us->getDistance() >= DIST) {
 				this->taskState = MM0;
 			} else if(MsgServiceBT.isMsgAvailable()) {
-				Msg* status = MsgServiceBT.receiveMsg(btStatusPattern);
+				Msg* status = MsgServiceBT.receiveMsg(statusPattern);
 				if (status != NULL && status->getContent() == "ON") {
 					this->taskState = MM2;
 					GreenHouse::changeState(State::MANUAL);
@@ -37,8 +37,7 @@ void ModeManagerTask::tick() {
 
 		case MM2:
 			if(MsgServiceBT.isMsgAvailable()) {
-				Msg* status = MsgServiceBT.receiveMsg(btStatusPattern);
-				// MsgService.sendMsg(status->getContent());
+				Msg* status = MsgServiceBT.receiveMsg(statusPattern);
 				if (status != NULL && status->getContent() == "OFF") {
 					this->taskState = MM0;
 					GreenHouse::changeState(State::AUTO);

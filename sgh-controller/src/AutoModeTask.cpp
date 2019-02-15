@@ -4,9 +4,6 @@
 #include "GreenHouse.h"
 #include "Led.h"
 
-Pattern supplyPattern("sup");
-Pattern humidityPattern2("hum");
-
 AutoModeTask::AutoModeTask(int ledPin) {
 	this->led = new Led(ledPin);
 	this->currTaskState = AM0;
@@ -18,7 +15,10 @@ void AutoModeTask::updateTaskState(TaskState s) {
 }
 
 void AutoModeTask::tick() {
-		switch (this->currTaskState) {
+	Pattern supplyPattern("sup");
+	Pattern humidityPattern("hum");
+
+	switch (this->currTaskState) {
 		case AM0:
 			if (GreenHouse::checkState(AUTO)) {
 				this->led->switchOn();
@@ -34,7 +34,7 @@ void AutoModeTask::tick() {
 				updateTaskState(AM0);
 			} else if (MsgService.isMsgAvailable()) {
 				int flowRate = 0;
-				if (MsgService.isMsgAvailable(humidityPattern2)) {
+				if (MsgService.isMsgAvailable(humidityPattern)) {
 					MsgService.receiveMsg();
 				} else {
 					flowRate = MsgService.receiveMsg(supplyPattern)->convertToInt();

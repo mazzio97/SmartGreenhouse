@@ -9,19 +9,19 @@
 class ServoMotorImpl: public ServoMotor {
 
 public:
-  ServoMotorImpl(int pin);
+	ServoMotorImpl(int pin);
+	
+	void on();
+	void setPosition(int angle);
+	int getPosition();
+	void off();
+	void open();
+	void close();
 
-  void on();
-  void setPosition(int angle);
-  int getPosition();
-  void off();
-  void open();
-  void close();
-    
 private:
-  int pin; 
-  int currAngle;
-  ServoTimer2 motor; 
+	int pin; 
+	int currAngle;
+	ServoTimer2 motor; 
 };
 
 #endif

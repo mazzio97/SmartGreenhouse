@@ -8,13 +8,11 @@
 PumpTask::PumpTask(int ledPin, int servoPin) {
 	this->taskState = P0;
 	this->led = new LedExt(ledPin, 0);
-	// this->led->switchOn();
-	// this->led->setIntensity(250);
 	this->servo = new ServoMotorImpl(servoPin);
 }
 
 void PumpTask::tick() {
-		switch (this->taskState) {
+	switch (this->taskState) {
 		case P0:
 			if (GreenHouse::getFlowRate() > 0) {
 				this->led->switchOn();

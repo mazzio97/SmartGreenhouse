@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractServerThread implements Runnable {
     protected Thread thread;
-    private final String name;
+    protected final String name;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final int sleepTime;
 

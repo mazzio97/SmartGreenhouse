@@ -10,8 +10,8 @@ ManualModeTask::ManualModeTask(int ledPin) {
 }
 
 void ManualModeTask::tick() {
-	Pattern humidityPattern("hum");
-	Pattern supplyPattern("sup");
+	Pattern humidityPattern(HUMIDITY_TAG);
+	Pattern supplyPattern(SUPPLY_TAG);
 
 	switch (this->currTaskState) {
 		case MM0:
@@ -28,7 +28,7 @@ void ManualModeTask::tick() {
 				Msg* flow = MsgServiceBT.receiveMsg(supplyPattern);
 				if (flow != NULL) {
 					GreenHouse::setFlowRate(flow->convertToInt());
-					MsgService.sendMsg("pump" + flow->getContent());
+					MsgService.sendMsg((String) PUMP_TAG + flow->getContent());
 				}
 			}
 			break;

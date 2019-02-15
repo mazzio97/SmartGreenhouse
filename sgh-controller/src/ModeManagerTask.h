@@ -5,7 +5,8 @@
 #include "UltraSonicSensor.h"
 
 #define DIST 0.3
-#define MSG_TAG "mode"
+#define STATUS_TAG "status"
+#define MODE_TAG "mode"
 
 class ModeManagerTask : public Task {
 

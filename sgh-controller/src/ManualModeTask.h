@@ -4,6 +4,10 @@
 #include "Task.h"
 #include "Light.h"
 
+#define HUMIDITY_TAG "hum"
+#define SUPPLY_TAG "sup"
+#define PUMP_TAG "pump"
+
 class ManualModeTask : public Task {
 
 public:

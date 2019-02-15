@@ -12,12 +12,16 @@ public class SocketServerAndroid extends AbstractSocketServer {
     }
 
     @Override
-    protected void job() throws Exception {
+    protected void job() throws IOException {
         super.job();
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        Integer humidity = DataCentre.getInstance().getLastPerceivedHumidity().getValue().intValue();
-        out.write(humidity.toString());
-        out.flush();
+        try {
+            Integer humidity = DataCentre.getInstance().getLastPerceivedHumidity().getValue().intValue();
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            out.write(humidity.toString());
+            out.flush();
+        } catch(IllegalStateException e) {
+            System.out.println(this.name + ": " + "no humidity value available");
+        }
         socket.close();
     }
 }

@@ -15,8 +15,8 @@ void AutoModeTask::updateTaskState(TaskState s) {
 }
 
 void AutoModeTask::tick() {
-	Pattern supplyPattern("sup");
-	Pattern humidityPattern("hum");
+	Pattern supplyPattern(SUPPLY_TAG);
+	Pattern humidityPattern(HUMIDITY_TAG);
 
 	switch (this->currTaskState) {
 		case AM0:

@@ -53,7 +53,6 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
     
     private void initializeIrrigation(final Integer supply) {
         data.recordIrrigation(supply);
-        System.out.println(supply);
         SmartGreenHouseServer.getChannel().sendMsg("sup" + supply.toString());
         System.out.println("Inizio irrigazione");
         sendMsgToClient("pump" + supply);

@@ -1,20 +1,22 @@
 #include <ESP8266WiFi.h>
-#include "DHT.h"
+// #include "DHT.h"
 
 #define NAME "Vodafone-A47870842"
 #define PASS "w57t646yt8mpwpw4"
-#define DHTPIN 4
-#define DHTTYPE DHT22
 
 const char* host = "192.168.1.13";
 WiFiClient client;
+
+
+// #define DHTPIN 4
+// #define DHTTYPE DHT22
+
 //DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(115200);
   Serial.println();
 
-  /* Set Client up as station */
   WiFi.mode(WIFI_STA);
 
   WiFi.begin(NAME, PASS);
@@ -30,6 +32,7 @@ void setup() {
 
   Serial.print("Connected, IP address: ");
   Serial.println(WiFi.localIP());
+ 
   pinMode(A0, INPUT);
 }
 

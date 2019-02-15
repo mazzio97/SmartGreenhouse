@@ -47,7 +47,7 @@ public class DataCentre {
     }
     
     public Entry<Instant, Double> getLastPerceivedHumidity() {
-        return humidity.lastEntry();
+        return Optional.of(humidity).filter(h -> !h.isEmpty()).map(h -> h.lastEntry()).orElseThrow(() -> new IllegalStateException());
     }
     
     public void setMode(Mode m) {

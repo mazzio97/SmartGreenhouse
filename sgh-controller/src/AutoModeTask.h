@@ -5,6 +5,9 @@
 #include "Light.h"
 #include "UltraSonicSensor.h"
 
+#define HUMIDITY_TAG "hum"
+#define SUPPLY_TAG "sup"
+
 enum TaskState {AM0, AM1, AM2, AM3};
 
 class AutoModeTask : public Task {

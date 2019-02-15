@@ -37,7 +37,6 @@ public class SerialReceiver extends AbstractServerThread {
     void job() throws Exception {
         if (serial.isMsgAvailable()) {
             final String msg = serial.receiveMsg();
-            System.out.println(msg);
             serialReceiverTasks.entrySet().stream()
                                           .filter(e -> msg.contains(e.getKey()))
                                           .findAny()

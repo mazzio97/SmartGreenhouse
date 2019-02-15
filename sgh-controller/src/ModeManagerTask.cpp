@@ -10,7 +10,7 @@ ModeManagerTask::ModeManagerTask(int echoPin, int triggerPin) {
 }
 
 void ModeManagerTask::tick() {
-	Pattern statusPattern("status");
+	Pattern statusPattern(STATUS_TAG);
 
 	switch (this->taskState) {
 		case MM0:
@@ -27,7 +27,7 @@ void ModeManagerTask::tick() {
 				if (status != NULL && status->getContent() == "ON") {
 					this->taskState = MM2;
 					GreenHouse::changeState(State::MANUAL);
-					MsgService.sendMsg((String)MSG_TAG + "manual");
+					MsgService.sendMsg((String) MODE_TAG + "manual");
 					Msg conn("CONNECTED");
 					MsgService.sendMsg(conn.getContent());
 					MsgServiceBT.sendMsg(conn);
@@ -41,7 +41,7 @@ void ModeManagerTask::tick() {
 				if (status != NULL && status->getContent() == "OFF") {
 					this->taskState = MM0;
 					GreenHouse::changeState(State::AUTO);
-					MsgService.sendMsg((String)MSG_TAG + "auto");
+					MsgService.sendMsg((String) MODE_TAG + "auto");
 					Msg disc("DISCONNECTED");
 					MsgService.sendMsg(disc.getContent());
 					MsgServiceBT.sendMsg(disc);

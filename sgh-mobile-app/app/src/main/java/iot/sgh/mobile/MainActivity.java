@@ -30,6 +30,11 @@ import unibo.btlib.exceptions.BluetoothDeviceNotFound;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SERVER_IP = "192.168.1.13";
+    private static final int SERVER_PORT = 6060;
+    private static final String STATUS_TAG = "status";
+    private static final String SUPPLY_TAG = "sup";
+
     private Switch manualMode;
     private ProgressBar humidityValue;
     private TextView humidityText;
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
+
         flowAmount = 25;
         pumpOpened = false;
     }
@@ -73,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                socket = new Socket("192.168.1.13", 6060);
+                socket = new Socket(SERVER_IP, SERVER_PORT);
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String hum = in.readLine();
                 humidityValue.setProgress(Integer.parseInt(hum));
-                humidityText.setText(getString(R.string.humidity_level) + " " + hum + "%");
+                humidityText.setText(String.format("%s %s%%", getString(R.string.humidity_level), hum));
                 socket.close();
 
             } catch (Exception e) {
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     bluetoothDeviceNotFound.printStackTrace();
                 }
             } else {
-                btChannel.sendMessage("statusOFF");
+                btChannel.sendMessage(STATUS_TAG + "OFF");
                 btChannel.close();
                 toggleWidgets(false);
             }
@@ -131,10 +137,10 @@ public class MainActivity extends AppCompatActivity {
 
         togglePumpButton.setOnClickListener((e) -> {
             if (!pumpOpened) {
-                btChannel.sendMessage("sup" + flowAmount);
+                btChannel.sendMessage(SUPPLY_TAG + flowAmount);
                 togglePumpButton.setText(R.string.close_pump);
             } else {
-                btChannel.sendMessage("sup0");
+                btChannel.sendMessage(SUPPLY_TAG + "0");
                 togglePumpButton.setText(R.string.open_pump);
             }
             pumpOpened = !pumpOpened;
@@ -168,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask<Void, Void, Integer> execute = new ConnectToBluetoothServerTask(serverDevice, uuid, new ConnectionTask.EventListener() {
             @Override
             public void onConnectionActive(final BluetoothChannel channel) {
-                channel.sendMessage("statusON");
+                channel.sendMessage(STATUS_TAG + "ON");
                 Log.d(C.APP_LOG_TAG, String.format("Status : connected to server on device %s", serverDevice.getName()));
 
                 btChannel = channel;

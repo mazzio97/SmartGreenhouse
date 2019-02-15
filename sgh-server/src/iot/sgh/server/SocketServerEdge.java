@@ -28,7 +28,7 @@ public class SocketServerEdge extends AbstractSocketServer {
     }
 
     @Override
-    protected void job() throws Exception {
+    protected void job() throws IOException {
         super.job();
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

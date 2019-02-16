@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Launcher extends Application{
+
     private static final String URL = "/iot/sgh/layout/SmartGreenHouse.fxml";
     private static Stage primaryStage;
 

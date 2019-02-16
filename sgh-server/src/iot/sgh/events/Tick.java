@@ -6,11 +6,11 @@ public class Tick implements Event {
 	
 	private long time;
 	
-	public Tick(long time ){
+	public Tick(long time) {
 		this.time = time;
 	}
 	
-	public long getTime(){
+	public long getTime() {
 		return time;
 	}
 }

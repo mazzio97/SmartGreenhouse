@@ -1,6 +1,7 @@
 package iot.sgh.data;
 
 public enum Report {
+
     TIME_EXCEDEED("Time Excedeed");
     
     private String message;

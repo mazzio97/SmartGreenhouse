@@ -20,8 +20,8 @@ public class SocketServerEdge extends AbstractSocketServer {
     private final ObservableHumiditySensor humiditySensor;
     private final ObservableTimer timer;
 
-    public SocketServerEdge(int port, String name, ObservableHumiditySensor humiditySensor, ObservableTimer timer)
-            throws IOException {
+    public SocketServerEdge(String name, int port, 
+                            ObservableHumiditySensor humiditySensor, ObservableTimer timer) throws IOException {
         super(name, port);
         this.humiditySensor = humiditySensor;
         this.timer = timer;
@@ -29,28 +29,28 @@ public class SocketServerEdge extends AbstractSocketServer {
 
     @Override
     protected void job() throws IOException {
-        super.job();
+        this.socket = this.server.accept();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            final Instant now = Instant.now();
-            final float hum = Float.parseFloat(in.readLine());
-            // System.out.println(hum);
-            data.recordHumidity(now, hum);
-            if (data.getCurrMode() == Mode.AUTO) {
-                final Optional<Irrigation> lastIrrig = data.getLastIrrigation();
+            BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            float hum = Float.parseFloat(in.readLine());
+            data.recordHumidity(Instant.now(), hum);
+            if (data.getCurrMode().equals(Mode.AUTO)) {
+                Optional<Irrigation> lastIrrig = data.getLastIrrigation();
                 if (hum < DataCentre.MIN_HUMIDITY && lastIrrig.map(i -> i.isFinished()).orElse(true)) {
+                    System.out.println(name + ": start irrigation...");
                     humiditySensor.notifyEvent(new LowHumidityEvent());
                     timer.scheduleTick(DataCentre.MAX_EROGATION_TIME);
                 } else if (lastIrrig.filter(i -> !i.isFinished())
                                     .filter(i -> hum - i.getBeginHumidity() > DataCentre.DELTA_HUMIDITY).isPresent()) {
+                    System.out.println(name + ": stop irrigation");
                     humiditySensor.notifyEvent(new HumidityIncreasedEvent());
                     timer.stop();
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("Not a Number");
+            System.out.println(name + ": incorrect humidity value");
         }
-        socket.close();
+        this.socket.close();
     }
 
 }

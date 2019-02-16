@@ -3,6 +3,7 @@ package iot.sgh.data;
 import java.util.Arrays;
 
 public enum Flow {
+
     MIN(DataCentre.MIN_HUMIDITY * 2/3, DataCentre.MIN_HUMIDITY, 25), 
     MED(DataCentre.MIN_HUMIDITY * 1/3, DataCentre.MIN_HUMIDITY * 2/3, 100), 
     MAX(0, DataCentre.MIN_HUMIDITY * 1/3, 250);

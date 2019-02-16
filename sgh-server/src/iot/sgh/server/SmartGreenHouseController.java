@@ -1,8 +1,8 @@
 package iot.sgh.server;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Optional;
@@ -24,9 +24,16 @@ import iot.sgh.utility.eventloop.Observable;
 
 public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
 
+    private static final String CLIENT_IP = "192.168.1.13";
+    private static final int CLIENT_PORT = 7070;
+    private static final String STATUS_TAG = "status";
+    private static final String SUPPLY_TAG = "sup";
+    private static final String PUMP_TAG = "pump";
+    private static final String IRRIG_TAG = "irrig";
+    
     private final DataCentre data = DataCentre.getInstance();
 
-    public SmartGreenHouseController(final Observable... obs) {
+    public SmartGreenHouseController(Observable... obs) {
         Arrays.asList(obs).forEach(o -> startObserving(o));
     }
     
@@ -34,15 +41,16 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
     protected void setupHandlers() {
         addHandler(ManualModeEvent.class, (ev) -> {
             data.setMode(Mode.MANUAL);
-            sendMsgToClient("status" + "manual");
+            sendMsgToClient(STATUS_TAG + "manual");
         }).addHandler(AutoModeEvent.class, (ev) -> {
             data.setMode(Mode.AUTO);
-            sendMsgToClient("status" + "auto");
+            sendMsgToClient(STATUS_TAG + "auto");
         }).addHandler(LowHumidityEvent.class, (ev) -> {
             initializeIrrigation(Flow.getWaterSupply(data.getLastPerceivedHumidity().getValue()));
         }).addHandler(HumidityIncreasedEvent.class, (ev) -> {
             terminateIrrigation(Optional.empty());
         }).addHandler(Tick.class, (ev) -> {
+            System.out.println("TIMER: stop irrigation (out of time)");
             terminateIrrigation(Optional.of(Report.TIME_EXCEDEED));
         }).addHandler(ManualOpenEvent.class, (ev) -> {
             initializeIrrigation(((ManualOpenEvent) ev).getFlow());
@@ -51,34 +59,30 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
         });
     }
     
-    private void initializeIrrigation(final Integer supply) {
+    private void initializeIrrigation(Integer supply) {
         data.recordIrrigation(supply);
-        SmartGreenHouseServer.getChannel().sendMsg("sup" + supply.toString());
-        System.out.println("Inizio irrigazione");
-        sendMsgToClient("pump" + supply);
+        SerialReceiver.getChannel().sendMsg(SUPPLY_TAG + supply.toString());
+        sendMsgToClient(PUMP_TAG + supply);
     }
     
     private void terminateIrrigation(Optional<Report> report) {
-        SmartGreenHouseServer.getChannel().sendMsg("sup" + "0");
+        SerialReceiver.getChannel().sendMsg(SUPPLY_TAG + "0");
         final Irrigation lastIrrig = data.getLastIrrigation().get();
         lastIrrig.end();
         report.ifPresent(r -> lastIrrig.makeReport(r));
-        System.out.println("Fine irrigazione");
-        sendMsgToClient("pump" + "0");
-        sendMsgToClient("irrig" + lastIrrig.toString());
+        sendMsgToClient(PUMP_TAG + "0");
+        sendMsgToClient(IRRIG_TAG + lastIrrig.toString());
     }
     
     public static void sendMsgToClient(String msg) {
         try {
-            final Socket socket = new Socket("192.168.1.13", 7070);
+            final Socket socket = new Socket(CLIENT_IP, CLIENT_PORT);
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             out.write(msg);
             out.flush();
             socket.close();
-        } catch(ConnectException ce) {
-            
-        } catch(Exception e) {
-            e.printStackTrace();
+        } catch(IOException ce) {
+            System.out.println("Can't send " + msg + ": client unreachable");
         }
     }
 }

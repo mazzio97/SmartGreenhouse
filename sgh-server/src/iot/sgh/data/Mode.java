@@ -3,7 +3,9 @@ package iot.sgh.data;
 import java.util.Arrays;
 
 public enum Mode {
-    AUTO("auto"), MANUAL("manual");
+
+    AUTO("auto"), 
+    MANUAL("manual");
     
     private final String msg;
     

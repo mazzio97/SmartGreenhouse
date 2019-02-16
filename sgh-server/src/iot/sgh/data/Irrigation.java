@@ -14,7 +14,7 @@ public class Irrigation {
     private Optional<Report> report;
     
     // package-private
-    Irrigation(final int flow, final Entry<Instant, Double> begin) {
+    Irrigation(int flow, Entry<Instant, Double> begin) {
         this.flow = flow;
         this.begin = begin;
         this.end = Optional.empty();
@@ -75,7 +75,7 @@ public class Irrigation {
         ZonedDateTime zdt = ZonedDateTime.ofInstant(i, ZoneId.systemDefault());
         return String.format("%02d", zdt.getHour()) + ":" + 
                String.format("%02d", zdt.getMinute()) + ":" + 
-               String.format("%02d", zdt.getSecond() + 1);
+               String.format("%02d", zdt.getSecond());
     }
     
     private final String getDateFromInstant(Instant i) {

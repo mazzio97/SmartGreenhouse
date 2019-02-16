@@ -7,41 +7,22 @@ import iot.sgh.observables.ObservableHumiditySensor;
 import iot.sgh.observables.ObservableModeChange;
 import iot.sgh.observables.ObservablePump;
 import iot.sgh.observables.ObservableTimer;
-import iot.sgh.utility.serial.SerialCommChannel;
-import jssc.SerialPortList;
 
-public class SmartGreenHouseServer {
-
-    private static final int BOUND_RATE = 9600;
-
-    private static SerialCommChannel channel;
+public class SmartGreenHouseServer { 
 
     public static void main(String[] args) throws IOException {
-        try {
-            channel = new SerialCommChannel(SerialPortList.getPortNames()[0], BOUND_RATE);
-            System.out.println("Waiting Arduino for rebooting...");
-            Thread.sleep(4000);
-            System.out.println("Ready.");
-        } catch (Exception e) {
-            System.out.println("Unplugged device, Plug and restart!");
-            System.exit(-1);
-        }
-        
-        System.out.println(InetAddress.getLocalHost().getHostAddress());
+        System.out.println("Smart Green House Server running at " + InetAddress.getLocalHost().getHostAddress());
 
         final ObservableHumiditySensor humiditySensor = new ObservableHumiditySensor();
         final ObservableTimer timer = new ObservableTimer();
         final ObservableModeChange modeChange = new ObservableModeChange();
         final ObservablePump pump = new ObservablePump();
+
         new SmartGreenHouseController(humiditySensor, timer, modeChange, pump).start();
-        
-        new SocketServerGUI(4040, "GUI").start();
-        new SocketServerEdge(5050, "ESP", humiditySensor, timer).start();
-        new SerialReceiver("ARDUINO", modeChange, pump).start();
-        new SocketServerAndroid(6060, "ANDROID").start();
+        new SocketServerGUI("ServerGUI", 4040).start();
+        new SocketServerEdge("ServerESP", 5050, humiditySensor, timer).start();
+        new SocketServerAndroid("ServerANDROID", 6060).start();
+        // new SerialReceiver("SerialARDUINO", modeChange, pump).start();
     }
 
-    public static SerialCommChannel getChannel() {
-        return channel;
-    }
 }

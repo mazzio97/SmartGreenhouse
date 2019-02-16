@@ -6,7 +6,7 @@ public class ManualOpenEvent implements Event {
     
     private final int flow;
     
-    public ManualOpenEvent(final int flow) {
+    public ManualOpenEvent(int flow) {
         this.flow = flow;
     }
 

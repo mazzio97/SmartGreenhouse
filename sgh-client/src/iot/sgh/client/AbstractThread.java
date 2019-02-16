@@ -3,6 +3,7 @@ package iot.sgh.client;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractThread implements Runnable {
+
     protected Thread thread;
     protected final String name;
     private final AtomicBoolean running = new AtomicBoolean(false);

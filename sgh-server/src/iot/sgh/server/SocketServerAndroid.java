@@ -7,21 +7,22 @@ import java.io.OutputStreamWriter;
 import iot.sgh.data.DataCentre;
 
 public class SocketServerAndroid extends AbstractSocketServer {
-    public SocketServerAndroid(int port, String name) throws IOException {
+
+    public SocketServerAndroid(String name, int port) throws IOException {
         super(name, port);
     }
 
     @Override
     protected void job() throws IOException {
-        super.job();
+        this.socket = this.server.accept();
         try {
-            Integer humidity = DataCentre.getInstance().getLastPerceivedHumidity().getValue().intValue();
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            out.write(humidity.toString());
+            Integer hum = DataCentre.getInstance().getLastPerceivedHumidity().getValue().intValue();
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+            out.write(hum.toString());
             out.flush();
         } catch(IllegalStateException e) {
-            System.out.println(this.name + ": " + "no humidity value available");
+            System.out.println(this.name + ": no humidity value available");
         }
-        socket.close();
+        this.socket.close();
     }
 }

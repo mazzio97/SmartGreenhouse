@@ -3,6 +3,8 @@ package iot.sgh.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.Socket;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +25,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 public class SmartGreenHouseClient extends AbstractSocketClient {
-    private static final int UPPER_X_AXIS_BOUND = 60;
-    private static final String CLIENT_NAME = "CLIENT";
+
     private static final String SERVER_IP = "192.168.1.13";
     private static final int SERVER_PORT = 4040;
-    private static final String RECEIVER_NAME = "RECEIVER";
-    private static final int RECEIVER_PORT = 7070;    
+    private static final int RECEIVER_PORT = 7070;
+    private static final int UPPER_X_AXIS_BOUND = 60;
 
     @FXML
     private Label dateLabel;
@@ -54,7 +55,7 @@ public class SmartGreenHouseClient extends AbstractSocketClient {
     private Stack<String> irrigations = new Stack<>();
 
     public SmartGreenHouseClient() {
-        super(CLIENT_NAME, SERVER_IP, SERVER_PORT);
+        super("ClientGUI", SERVER_IP, SERVER_PORT);
     }
 
     public void initialize() throws IOException {
@@ -73,7 +74,7 @@ public class SmartGreenHouseClient extends AbstractSocketClient {
             lv.getItems().addAll(irrigations);
             dialog.showAndWait();
         });
-        new SocketClientReceiver(RECEIVER_NAME, RECEIVER_PORT).start();
+        new SocketClientReceiver("ServerRECEIVER", RECEIVER_PORT).start();
         this.start();
     }
 
@@ -98,35 +99,38 @@ public class SmartGreenHouseClient extends AbstractSocketClient {
 
     private void createSeries() {
         series = new XYChart.Series<Integer, Double>();
-        ;
     }
 
     private void updateDateHour() {
         dateLabel.setText(String.format("%02d", Calendar.getInstance().get(Calendar.DATE)) + "/"
-                + String.format("%02d", Calendar.getInstance().get(Calendar.MONTH)) + "/"
-                + String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+                        + String.format("%02d", Calendar.getInstance().get(Calendar.MONTH)) + "/"
+                        + String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
         hourLabel.setText(String.format("%02d", Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) + ":"
-                + String.format("%02d", Calendar.getInstance().get(Calendar.MINUTE)));
+                        + String.format("%02d", Calendar.getInstance().get(Calendar.MINUTE)));
     }
 
     @Override
     protected void job() throws IOException {
-        super.job();
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String receivedMsg = in.readLine();
-        Platform.runLater(() -> {
-            Double h = Double.parseDouble(receivedMsg.substring(0, receivedMsg.indexOf(":")));
-            Integer i = Integer.parseInt(receivedMsg.substring(receivedMsg.indexOf(":") + 1, receivedMsg.length()));
-            if (!series.getData().isEmpty()
-                    && i < series.getData().get(series.getData().size() - 1).getXValue().intValue()) {
-                createSeries();
-                updateDateHour();
-            }
-            series.getData().add(new Data<Integer, Double>(i, h));
-            chart.getData().retainAll();
-            chart.getData().addAll(series);
-        });
-        socket.close();
+        try {
+            this.socket = new Socket(ip, port);
+            BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            String receivedMsg = in.readLine();
+            Platform.runLater(() -> {
+                Double h = Double.parseDouble(receivedMsg.substring(0, receivedMsg.indexOf(":")));
+                Integer i = Integer.parseInt(receivedMsg.substring(receivedMsg.indexOf(":") + 1, receivedMsg.length()));
+                if (!series.getData().isEmpty()
+                        && i < series.getData().get(series.getData().size() - 1).getXValue().intValue()) {
+                    createSeries();
+                    updateDateHour();
+                }
+                series.getData().add(new Data<Integer, Double>(i, h));
+                chart.getData().retainAll();
+                chart.getData().addAll(series);
+            });
+            this.socket.close();
+        } catch(ConnectException ce) {
+            System.out.println(name + ": unable to reach server");
+        }
     }
 
     private class SocketClientReceiver extends AbstractSocketServer {
@@ -145,13 +149,13 @@ public class SmartGreenHouseClient extends AbstractSocketClient {
 
         @Override
         protected void job() throws IOException {
-            super.job();
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.socket = this.server.accept();
+            BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             String msg = in.lines().collect(Collectors.joining("\n"));
             socketReceiverTasks.entrySet().stream()
                                           .filter(e -> msg.contains(e.getKey())).findAny()
                                           .ifPresent(e -> e.getValue().accept(msg.replaceFirst(e.getKey(), "")));
-            socket.close();
+            this.socket.close();
         }
 
         private final Consumer<String> togglePumpTask() {

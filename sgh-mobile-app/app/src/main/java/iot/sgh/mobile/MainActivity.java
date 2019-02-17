@@ -30,7 +30,7 @@ import unibo.btlib.exceptions.BluetoothDeviceNotFound;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SERVER_IP = "192.168.1.13";
+    private static final String SERVER_IP = "192.168.178.113";
     private static final int SERVER_PORT = 6060;
     private static final String STATUS_TAG = "status";
     private static final String SUPPLY_TAG = "sup";

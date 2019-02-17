@@ -2,9 +2,13 @@ package iot.sgh.data;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -18,8 +22,10 @@ public class DataCentre {
     private static DataCentre instance = null;
     
     private Mode mode = Mode.AUTO;
-    private final ConcurrentNavigableMap<Instant, Double> humidity = new ConcurrentSkipListMap<>((k1, k2) -> Math.toIntExact(k1.toEpochMilli() - k2.toEpochMilli()));
-    private final BlockingDeque<Irrigation> irrigation = new LinkedBlockingDeque<>();
+//    private final ConcurrentNavigableMap<Instant, Double> humidityValues = new ConcurrentSkipListMap<>((k1, k2) -> Math.toIntExact(k1.toEpochMilli() - k2.toEpochMilli()));
+    private final NavigableMap<Instant, Double> humidityValues = new TreeMap<>((k1, k2) -> Math.toIntExact(k1.toEpochMilli() - k2.toEpochMilli()));
+//    private final BlockingDeque<Irrigation> irrigations = new LinkedBlockingDeque<>();
+    private final Deque<Irrigation> irrigations = new LinkedList<>();
     
     private DataCentre() {
         
@@ -32,23 +38,23 @@ public class DataCentre {
     }
     
     public void recordHumidity(Instant moment, double humValue) {
-    	humidity.put(moment, humValue);
+    	humidityValues.put(moment, humValue);
     }
 
     public void recordIrrigation(int flow) {
-        irrigation.add(new Irrigation(flow, getLastPerceivedHumidity()));
+        irrigations.add(new Irrigation(flow, getLastPerceivedHumidity()));
     }
 
     public Optional<Irrigation> getLastIrrigation() {
-        return Optional.ofNullable(irrigation.peekLast());
+        return Optional.ofNullable(irrigations.peekLast());
     }
     
     public Collection<Irrigation> getExecutedIrrigations() {
-        return irrigation.stream().filter(i -> i.isFinished()).collect(Collectors.toList());
+        return irrigations.stream().filter(i -> i.isFinished()).collect(Collectors.toList());
     }
     
     public Entry<Instant, Double> getLastPerceivedHumidity() {
-        return Optional.of(humidity).filter(h -> !h.isEmpty()).map(h -> h.lastEntry()).orElseThrow(() -> new IllegalStateException());
+        return Optional.of(humidityValues).filter(h -> !h.isEmpty()).map(h -> h.lastEntry()).orElseThrow(() -> new IllegalStateException());
     }
     
     public void setMode(Mode m) {

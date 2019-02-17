@@ -1,10 +1,10 @@
 #include <ESP8266WiFi.h>
 // #include "DHT.h"
 
-#define NAME "Vodafone-A47870842"
-#define PASS "w57t646yt8mpwpw4"
+#define NAME "EOLO - FRITZ!Box MC"
+#define PASS "98241153892377645827"
 
-const char* host = "192.168.1.13";
+const char* host = "192.168.178.113";
 WiFiClient client;
 
 

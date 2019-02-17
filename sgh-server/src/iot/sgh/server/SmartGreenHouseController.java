@@ -24,7 +24,7 @@ import iot.sgh.utility.eventloop.Observable;
 
 public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
 
-    private static final String CLIENT_IP = "192.168.1.13";
+    private static final String CLIENT_IP = "192.168.178.113";
     private static final int CLIENT_PORT = 7070;
     private static final String STATUS_TAG = "status";
     private static final String SUPPLY_TAG = "sup";
@@ -82,7 +82,7 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
             out.flush();
             socket.close();
         } catch(IOException ce) {
-            System.out.println("Can't send " + msg + ": client unreachable");
+            // System.out.println("Can't send message: client unreachable");
         }
     }
 }

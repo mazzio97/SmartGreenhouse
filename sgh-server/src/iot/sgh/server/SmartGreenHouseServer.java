@@ -22,7 +22,7 @@ public class SmartGreenHouseServer {
         new SocketServerGUI("ServerGUI", 4040).start();
         new SocketServerEdge("ServerESP", 5050, humiditySensor, timer).start();
         new SocketServerAndroid("ServerANDROID", 6060).start();
-        // new SerialReceiver("SerialARDUINO", modeChange, pump).start();
+        new SerialReceiver("SerialARDUINO", modeChange, pump).start();
     }
 
 }

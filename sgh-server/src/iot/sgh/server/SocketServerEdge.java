@@ -37,18 +37,16 @@ public class SocketServerEdge extends AbstractSocketServer {
             if (data.getCurrMode().equals(Mode.AUTO)) {
                 Optional<Irrigation> lastIrrig = data.getLastIrrigation();
                 if (hum < DataCentre.MIN_HUMIDITY && lastIrrig.map(i -> i.isFinished()).orElse(true)) {
-                    System.out.println(name + ": start irrigation...");
                     humiditySensor.notifyEvent(new LowHumidityEvent());
                     timer.scheduleTick(DataCentre.MAX_EROGATION_TIME);
                 } else if (lastIrrig.filter(i -> !i.isFinished())
                                     .filter(i -> hum - i.getBeginHumidity() > DataCentre.DELTA_HUMIDITY).isPresent()) {
-                    System.out.println(name + ": stop irrigation");
                     humiditySensor.notifyEvent(new HumidityIncreasedEvent());
                     timer.stop();
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println(name + ": incorrect humidity value");
+            System.out.println("Incorrect humidity value");
         }
         this.socket.close();
     }

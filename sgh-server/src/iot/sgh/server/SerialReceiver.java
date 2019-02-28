@@ -64,11 +64,9 @@ public class SerialReceiver extends AbstractThread {
         return (msg) -> {
             switch (Mode.get(msg.replaceAll(ONLY_LETTERS_AND_PUNCTUATION, ""))) {
             case AUTO:
-                System.out.println(name + ": passing to mode AUTO");
                 modeChange.notifyEvent(new AutoModeEvent());
                 break;
             case MANUAL:
-                System.out.println(name + ": passing to mode MANUAL");
                 modeChange.notifyEvent(new ManualModeEvent());
                 break;
             default:
@@ -80,13 +78,7 @@ public class SerialReceiver extends AbstractThread {
     private final Consumer<String> togglePumpTask() {
         return (msg) -> {
             int flow = Integer.parseInt(msg.replaceAll(ONLY_NUMBERS, ""));
-            if (flow > 0) {
-                System.out.println(name + ": start irrigation (manual)...");
-                pump.notifyEvent(new ManualOpenEvent(flow));
-            } else {
-                System.out.println(name + ": stop irrigation (manual)");
-                pump.notifyEvent(new ManualCloseEvent());
-            }
+            pump.notifyEvent((flow > 0) ? new ManualOpenEvent(flow) : new ManualCloseEvent());
         };
     }
 }

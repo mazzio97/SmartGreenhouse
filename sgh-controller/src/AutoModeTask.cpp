@@ -35,7 +35,7 @@ void AutoModeTask::tick() {
 			} else if (MsgService.isMsgAvailable()) {
 				int flowRate = 0;
 				if (MsgService.isMsgAvailable(humidityPattern)) {
-					MsgService.receiveMsg();
+					MsgService.receiveMsg(); // flush
 				} else {
 					flowRate = MsgService.receiveMsg(supplyPattern)->convertToInt();
 				}
@@ -49,12 +49,9 @@ void AutoModeTask::tick() {
 			if (GreenHouse::checkState(MANUAL) 
 				|| (MsgService.isMsgAvailable(supplyPattern) 
 					&& MsgService.receiveMsg(supplyPattern)->convertToInt() == 0)) {
-				updateTaskState(AM3);
+				GreenHouse::setFlowRate(0);
+				updateTaskState(AM1);
 			}
-			break;
-		case AM3:
-			GreenHouse::setFlowRate(0);
-			updateTaskState(AM1);
 			break;
 	}
 }

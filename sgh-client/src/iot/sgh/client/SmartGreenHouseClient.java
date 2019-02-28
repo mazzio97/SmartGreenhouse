@@ -26,7 +26,7 @@ import javafx.scene.control.ListView;
 
 public class SmartGreenHouseClient extends AbstractSocketClient {
 
-    private static final String SERVER_IP = "192.168.178.113";
+    private static final String SERVER_IP = "192.168.1.13";
     private static final int SERVER_PORT = 4040;
     private static final int RECEIVER_PORT = 7070;
     private static final int UPPER_X_AXIS_BOUND = 60;

@@ -21,7 +21,6 @@ public class SocketServerAndroid extends AbstractSocketServer {
             out.write(hum.toString());
             out.flush();
         } catch(IllegalStateException e) {
-            System.out.println(this.name + ": no humidity value available");
         }
         this.socket.close();
     }

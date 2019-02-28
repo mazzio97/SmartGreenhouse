@@ -24,7 +24,7 @@ import iot.sgh.utility.eventloop.Observable;
 
 public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
 
-    private static final String CLIENT_IP = "192.168.178.113";
+    private static final String CLIENT_IP = "192.168.1.13";
     private static final int CLIENT_PORT = 7070;
     private static final String STATUS_TAG = "status";
     private static final String SUPPLY_TAG = "sup";
@@ -40,21 +40,27 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
     @Override
     protected void setupHandlers() {
         addHandler(ManualModeEvent.class, (ev) -> {
+            System.out.println("Passing to mode MANUAL");
             data.setMode(Mode.MANUAL);
             sendMsgToClient(STATUS_TAG + "manual");
         }).addHandler(AutoModeEvent.class, (ev) -> {
+            System.out.println("Passing to mode AUTO");
             data.setMode(Mode.AUTO);
             sendMsgToClient(STATUS_TAG + "auto");
         }).addHandler(LowHumidityEvent.class, (ev) -> {
+            System.out.println("Start irrigation (AUTO)...");
             initializeIrrigation(Flow.getWaterSupply(data.getLastPerceivedHumidity().getValue()));
         }).addHandler(HumidityIncreasedEvent.class, (ev) -> {
+            System.out.println("Stop irrigation (AUTO)");
             terminateIrrigation(Optional.empty());
         }).addHandler(Tick.class, (ev) -> {
-            System.out.println("TIMER: stop irrigation (out of time)");
+            System.out.println("Stop irrigation (OUT OF TIME)");
             terminateIrrigation(Optional.of(Report.TIME_EXCEDEED));
         }).addHandler(ManualOpenEvent.class, (ev) -> {
+            System.out.println("Start irrigation (MANUAL)...");
             initializeIrrigation(((ManualOpenEvent) ev).getFlow());
         }).addHandler(ManualCloseEvent.class, (ev) -> {
+            System.out.println("Stop irrigation (MANUAL)");
             terminateIrrigation(Optional.empty());
         });
     }
@@ -81,8 +87,7 @@ public class SmartGreenHouseController extends EventLoopControllerWithHandlers {
             out.write(msg);
             out.flush();
             socket.close();
-        } catch(IOException ce) {
-            // System.out.println("Can't send message: client unreachable");
+        } catch(IOException e) {
         }
     }
 }

@@ -20,7 +20,7 @@ void ModeManagerTask::tick() {
 			break;
 
 		case MM1: 
-			if (this->us->getDistance() >= DIST) {
+			if (this->us->getDistance() > DIST) {
 				this->taskState = MM0;
 			} else if(MsgServiceBT.isMsgAvailable()) {
 				Msg* status = MsgServiceBT.receiveMsg(statusPattern);

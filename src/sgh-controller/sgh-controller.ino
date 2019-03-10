@@ -3,7 +3,6 @@
  * Membri Gruppo: Diego Mazzieri, Milo Marchetti
  */
 
-#include "Arduino.h"
 #include "Scheduler.h"
 #include "MsgService.h"
 #include "ModeManagerTask.h"
